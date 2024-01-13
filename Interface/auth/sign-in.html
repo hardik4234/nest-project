@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        #detail_box
+        {
+            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
+            background-size: cover;
+            margin-left: 20%;
+            margin-right: 20%;
+            border-radius: 20px;
+            font-size: 25px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        #credentials
+        {
+            margin-left: 50%;
+        }
+        #heading
+        {
+            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
+            color: rgb(255, 255, 255);
+            border-radius: 40px;
+            margin-left: 20%;
+            margin-right: 20%;
+            text-align: center;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            font-size: 33px;
+        }
+        #text
+        {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 25px;
+            font-weight:bold;
+            color: rgb(138, 70, 206);
+        }
+        .textbox
+        {
+            color: rgb(138, 70, 206);
+            font-size: 25px;
+            border-radius: 25px;
+        }
+        .buttons
+        {
+            border-radius: 30px;
+            border-color: aliceblue;
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            background-color: rgb(138, 70, 206);
+        }
+        #reset
+        {
+            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
+            margin-left: 20%;
+            margin-right: 20%;
+            border-radius: 20px;
+            font-size: 25px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        @media screen and (max-width: 621px)
+        {
+            #detail_box
+            {
+                margin-left: 2%;
+                margin-right: 2%;
+            }
+            #credentials
+            {
+                margin-left: 7%;
+                margin-right: 7%;
+                text-align: center;
+            }
+            .textbox
+            {
+                font-size: 15px;
+            }
+            #reset
+            {
+                margin-left: 2%;
+                margin-right: 2%;
+            }
+        }
+        @media screen and (max-width: 700px)
+        {
+            .textbox
+            {
+                font-size: 17px;
+            }
+        }
+        @media screen and (max-width: 800px)
+        {
+            .textbox
+            {
+                font-size: 20px;
+            }
+        }
+        @media screen and (max-width: 900px)
+        {
+            .textbox
+            {
+                font-size: 22px;
+            }
+        }
+        @media screen and (max-width: 1085px)
+        {
+            #credentials
+            {
+                margin-left: 7%;
+                margin-right: 7%;
+                text-align: center;
+            }
+        }
+        </style>
+    <script>
+    var reset_loaded = false;
+    var response_got;
+
+    function auto_detect(){
+        var cookie_data = decodeURIComponent(document.cookie);
+        var token = cookie_data.slice(cookie_data.indexOf("=")+1);
+        if( token != ""){
+            var obj = `{"token":"${token}"}`;
+    
+            const caller = new XMLHttpRequest();
+            const url = '/jwt/login';
+            caller.open('POST',url);     
+            caller.setRequestHeader('Content-Type', 'application/json');
+            caller.onload = function() {
+                response_got=JSON.parse(caller.responseText);
+                console.log(response_got.message);
+                if( response_got.status === 109 ){
+                    window.location.href = "/home";
+                }
+            }
+            caller.send(obj);
+        }
+    }
+
+    function reset_section(){
+        
+        if(reset_loaded==false){
+            document.getElementById('reset').innerHTML = `<br>
+            Enter Your Email <input type="email" name="email" class="textbox" required>
+            <br><br>
+            <input type="reset" value="CLEAR" class="buttons">  <input type="submit" value="SEND OTP" class="buttons">
+            <br><br>`;
+            reset_loaded=true;
+        }else{
+            document.getElementById('reset').innerHTML = ``;
+            reset_loaded=false;
+        }
+    }
+    
+    function api_credentials(){
+        const form = document.querySelector("#credentials");
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        const sender = JSON.stringify(data);
+
+        const caller = new XMLHttpRequest();
+        const url = '/auth/login';
+        caller.open('POST',url);     
+        caller.setRequestHeader('Content-Type', 'application/json');
+        caller.onload = function() {
+            response_got=JSON.parse(caller.responseText);
+            console.log(response_got.message);
+            if( response_got.status == 108 ){
+                    auto_detect();
+            }else{
+                document.getElementById('error').innerHTML=response_got.message;
+            }
+        }
+        caller.send(sender);
+        return false;
+    }
+
+    function api_reset(){
+        const form = document.querySelector("#reset");
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        const sender = JSON.stringify(data);
+        
+        let obj = sender.substring(0,sender.length-1);
+        obj = obj.concat(`,"mode":"reset"}`)
+        const caller = new XMLHttpRequest();
+        const url = '/auth/resend';
+        caller.open('POST',url);     
+        caller.setRequestHeader('Content-Type', 'application/json');
+        caller.onload = function() {
+            response_got=JSON.parse(caller.responseText);
+            //console.log(response_got);
+            //console.log(caller.status);
+            //console.log(caller.statusText);
+            if( response_got.status == 103 ){
+                window.location.href='/verify-email';
+            }else{
+                alert(response_got.message);
+            }
+        }
+        caller.send(obj);
+        return false;
+    }
+    </script>
+</head>
+<body onload="auto_detect()">
+    <p id="heading">SIGN-IN WINDOW</p> 
+    <p id="text">ENTER YOUR CREDENTIALS</p>
+    <div id="detail_box">
+    <br>
+    <form id="credentials" onsubmit="return api_credentials()" autocomplete="off">
+    Email<br>
+    <input type="email" name="email" class="textbox" required><br><br>
+    Password<br>
+    <input type="password" name="password" class="textbox" required><br>
+    <p id="error"><br></p>
+    <input type="reset" value="CLEAR" class="buttons">
+    <input type="submit" value="SIGN IN" class="buttons"><br><br>
+    </form>
+    </div>
+    <p id="text">
+        NOT YET SIGNED UP ?<a href="/sign-up"><br><input type="button" value="SIGN UP" class="buttons"></a><br>
+        FORGOT PASSWORD ?<br><input type="button" value="RESET" class="buttons" onclick="reset_section()"> 
+        <form id="reset" onsubmit="return api_reset()" align="center"></form>
+    </p>
+</body>
+</html>

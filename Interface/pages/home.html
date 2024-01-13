@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body{
+        margin:0;
+      }
+            
+      #navbar {
+        overflow: hidden;
+        position:fixed;
+        width:100%;
+        top: 0;
+        background-color: #333;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        padding-top: 0.5%;
+        padding-bottom: 0.5%;
+      }
+
+      li .left{
+        float: left;
+      }
+
+      li .right{
+        float: right;
+      }
+
+      li a {
+        display: block;
+        color: white;
+        text-align: center;
+        font-size: 25px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        text-decoration: none;
+        padding: 2px 2px 2px 2px;
+}
+
+img{
+  border-radius: 25px;
+}
+
+li a:hover {
+  background-color: aqua;
+  color: #000;
+}
+
+  </style>
+  <script>
+    function check(){
+      var cookie_data = decodeURIComponent(document.cookie);
+      var token = cookie_data.slice(cookie_data.indexOf("=")+1);
+      if( token != ""){
+      }else{
+        window.location.href= "/sign-in";
+      }
+    }
+
+    function permission(){
+      var cookie_data = decodeURIComponent(document.cookie);
+        var token = cookie_data.slice(cookie_data.indexOf("=")+1);
+        if( token != ""){
+            var obj = `{"token":"${token}"}`;
+    
+            const caller = new XMLHttpRequest();
+            const url = '/jwt/login';
+            caller.open('POST',url);     
+            caller.setRequestHeader('Content-Type', 'application/json');
+            caller.onload = function() {
+                response_got=JSON.parse(caller.responseText);
+                document.getElementById('resp').innerHTML=response_got.message;
+            }
+            caller.send(obj);
+        }
+    }
+
+  </script>
+</head>
+<body onload="check()">
+    <ul id="navbar">
+            <li><a href="#" class="left"><img src="" alt="logo" width="30"></a></li>
+            <li><a href="#" class="left">ADD QUESTIONS</a></li>
+            <li><a href="#" class="left">ADD SECTIONS</a></li>
+            <li><a href="#" class="left">ABOUT</a></li>
+            <li><a href="#" class="left">f</a></li>
+            <li><a href="#" class="left">d</a></li>
+            <li><a href="#" class="right">LOGOUT</a></li>
+            <li><a href="#" class="right">PROFILE</a></li>
+            
+    </ul>
+<br><br><br><br><br><br><br>
+    <input type="button" value="check" onclick="permission()";
+    <div id="resp"></div>
+
+</body>
+</html>

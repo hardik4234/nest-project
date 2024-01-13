@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        #detail_box
+        {
+            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
+            background-size: cover;
+            margin-left: 20%;
+            margin-right: 20%;
+            border-radius: 20px;
+            color: #ffffff;
+            font-size: 25px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+        }
+        #form
+        {
+            margin-left: 50%;
+        }
+        #heading
+        {
+            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
+            color: rgb(255, 255, 255);
+            border-radius: 40px;
+            margin-left: 20%;
+            margin-right: 20%;
+            text-align: center;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+        }
+        #text
+        {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 25px;
+            font-weight:bold;
+            color: rgb(138, 70, 206);
+        }
+        .textbox
+        {
+            color: rgb(138, 70, 206);
+            font-size: 25px;
+            align-items:last baseline;
+            border-radius: 25px;
+        }
+        .buttons
+        {
+            border-radius: 30px;
+            border-color: aliceblue;
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            background-color: rgb(138, 70, 206);
+        }
+        @media screen and (max-width: 621px)
+        {
+            #detail_box
+            {
+                margin-left: 2%;
+                margin-right: 2%;
+            }
+            #form
+            {
+                margin-left: 7%;
+                margin-right: 7%;
+                text-align: center;
+            }
+            .textbox
+            {
+                font-size: 15px;
+            }
+        }
+        @media screen and (max-width: 700px)
+        {
+            .textbox
+            {
+                font-size: 17px;
+            }
+        }
+        @media screen and (max-width: 800px)
+        {
+            .textbox
+            {
+                font-size: 20px;
+            }
+        }
+        @media screen and (max-width: 900px)
+        {
+            .textbox
+            {
+                font-size: 22px;
+            }
+        }
+        @media screen and (max-width: 1085px)
+        {
+            #form
+            {
+                margin-left: 7%;
+                margin-right: 7%;
+                text-align: center;
+            }
+        }
+    </style>
+    <script>
+        function api_details(){
+            document.getElementById('error').innerHTML='Processing...';
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            const sender = JSON.stringify(data);
+            //console.log(data);
+            const caller = new XMLHttpRequest();
+            const url = '/auth/generate';
+            caller.open('POST',url);     
+            caller.setRequestHeader('Content-Type', 'application/json');
+            caller.onload = function() {
+                response_got=JSON.parse(caller.responseText);
+                    //console.log(response_got);
+                    //console.log(caller.status);
+                    //console.log(caller.statusText);
+                    if( response_got.status == 101 ){
+                        window.location.href = "/verify-email";
+                    }else{
+                        document.getElementById('error').innerHTML=response_got.message;
+                    }
+            }
+            caller.send(sender);  
+            return false; 
+        }
+    </script>
+</head>
+<body>
+    <H1 id="heading">SIGN-UP WINDOW</H1> 
+    <p id="text">ENTER YOUR DETAILS</p>
+    <div id="detail_box"><br>
+    <form id="form" onsubmit="return api_details()" autocomplete="off">
+    Email<br>
+    <input type="email" name="email" class="textbox" required><br><br>
+    First Name<br>
+    <input type="text" name="fname" class="textbox" required><br><br>
+    Last Name<br>
+    <input type="text" name="lname" class="textbox" required><br><br> 
+    Mobile<br>
+    <input type="number" name="mobile" class="textbox"><br><br>
+    Gender<br>
+    <input type="radio" name='gender' value="Male" id="male"><label for="male">Male</label><br>
+	<input type="radio" name='gender' value="Female" id="female"><label for="female">Female</label><br>
+	<input type="radio" name='gender' value="Prefer Not to Answer" id="na"><label for="na">Other</label><br>
+    <p id="error"><br></p>
+    <input type="reset" value="CLEAR" class="buttons">
+    <input type="submit" value="GENERATE" class="buttons"><br><br>
+    </div>
+    </form>
+    <p id="text">ALREADY A USER ? <a href="/sign-in"><input type="button" value="SIGN IN" class="buttons"></a></p>
+</body>
+</html>
