@@ -31,7 +31,7 @@ export class JWTService {
     } catch {
       return {
         "status": 0,
-        "message": "Token Expired"
+        "message": "Token Invalid or Expired"
       };
     }
   }
