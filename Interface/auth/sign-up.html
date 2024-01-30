@@ -111,16 +111,12 @@
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
             const sender = JSON.stringify(data);
-            //console.log(data);
             const caller = new XMLHttpRequest();
             const url = '/auth/generate';
             caller.open('POST',url);     
             caller.setRequestHeader('Content-Type', 'application/json');
             caller.onload = function() {
                 response_got=JSON.parse(caller.responseText);
-                    //console.log(response_got);
-                    //console.log(caller.status);
-                    //console.log(caller.statusText);
                     if( response_got.status == 101 ){
                         window.location.href = "/verify-email";
                     }else{

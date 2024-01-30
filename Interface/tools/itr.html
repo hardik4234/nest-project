@@ -35,18 +35,8 @@
                 transition-duration: 0.5s;
                 opacity: 0;
             }
-            #container3
-            {
-                translate:-50px;
-                transition-duration: 0.5s;
-                opacity: 0;
-            }
-            #container4
-            {
-                translate:-50px;
-                transition-duration: 0.5s;
-                opacity: 0;
-            }
+            #container3,
+            #container4,
             #container5
             {
                 translate:-50px;
@@ -81,7 +71,6 @@
                 }
                 for(i=level+1;i<=5;i++){
                     if(document.getElementById(`container${i}`)){
-                        //document.getElementById(`container${i}`).innerHTML=" ";
                         document.getElementById(`container${i}`).style.translate='-50px';
                         document.getElementById(`container${i}`).style.opacity='0';
                     }
@@ -93,7 +82,6 @@
                         options++;
                 }
                 itr_changer();
-                //alert(forms[0]+" "+forms[1]+" "+forms[2]+" "+forms[3]+" "+forms[4]+" "+forms[5]+" "+forms[6]);
                 if(options>1) decision(level);
             }
 

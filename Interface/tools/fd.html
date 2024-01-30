@@ -68,7 +68,54 @@
     background-color: aquamarine;
 }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script>
+        var columns = [];
+        var interest= [];
+        var colour= [];
+        var amount = [];
+    
+    function graph(){
+        new Chart("interest", {
+            type: "bar",
+            data: {
+                labels: columns,
+                datasets: [{
+                    backgroundColor: colour,
+                    data: interest
+                }]
+            },
+            options: {
+                legend: {display: false},
+                title: {
+                    display: true,
+                    text: "Interest"
+                }
+            }
+        });
+        new Chart("amount", {
+            type: "bar",
+            data: {
+                labels: columns,
+                datasets: [{
+                    backgroundColor: colour,
+                    data: amount
+                }]
+            },
+            options: {
+                legend: {display: false},
+                title: {
+                    display: true,
+                    text: "Amount"
+                }
+            }
+        });
+        columns = [];
+        interest= [];
+        colour= [];
+        amount = [];
+    }
+
     function incomplete_data_check(){
     let principal = Number(document.getElementById('p').value);
     let rate = Number(document.getElementById('r').value);
@@ -96,6 +143,7 @@
     }else{
         clear_data();
         analyse(checked_age,checked_frequency);
+        graph();
     }
     return false;
 }
@@ -134,10 +182,7 @@ function analyse(checked_age,checked_frequency){
             <br>
             ${year}<br>
             Principal = ${P}<br>
-            Rate = ${rate}<br>
-            Interest Generated= ${I}<br>
-            Annual Interest exceeded the non-taxable limit of Rs. ${limit}.<br>
-            Tax(TDS) = 10% of Annual Interest<br>
+            Annual Interest = ${I}<br>
             Tax Amount(TDS) to be Deducted = ${tax}<br>
             Interest to be Compounded after Tax(TDS) is Deducted = ${Ir}<br>
             A = ${A}<br><br>
@@ -146,6 +191,7 @@ function analyse(checked_age,checked_frequency){
 
             total_tax += Number(tax);
             
+            colour.push("red");
         }else{
             
             A = (Number(P) + Number(I)).toFixed(2);
@@ -154,14 +200,17 @@ function analyse(checked_age,checked_frequency){
             <br>
             ${year}<br>
             Principal = ${P}<br>
-            Rate = ${rate}<br>
-            Interest Generated= ${I}<br>
-            Annual Interest is in the non-taxable limit of Rs. ${limit}.<br>
+            Annual Interest = ${I}<br>
             No Tax Amount(TDS) to be Deducted<br>
             A = ${A}<br><br>
             </div>
             <br><br>`;
+
+            colour.push("green");
         }
+        amount.push(A);
+        interest.push(I);
+        columns.push(`Year ${year}`);
     }
 
     document.getElementById('analysis').innerHTML += `
@@ -238,6 +287,16 @@ function analyse(checked_age,checked_frequency){
         <input type="reset" class="buttons" value="CLEAR QUERY">
     </div>
     </form>
+    <div class="container-sm">
+        <div class="separator">
+        <div class="container-sm">
+            <canvas id="interest" style="max-width:550px"></canvas>
+        </div>
+        <div class="container-sm">
+            <canvas id="amount" style="max-width:550px"></canvas>
+        </div>
+        </div>
+    </div>
     <br>
     <div class="container-sm" id="analysis"></div>
     </div>
