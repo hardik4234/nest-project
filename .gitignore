@@ -37,3 +37,4 @@ lerna-debug.log*
 # MANUALLY IGNORED
 .env
 installers.txt
+logo.png

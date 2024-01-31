@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>W3.CSS Template</title>
+<link rel="icon" type="image/x-icon" href="/proj/Interface/logo.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -11,43 +12,44 @@
   body
   {
     color: white;
+    background-color: #04293a;
   }
   .w3-top
   {
     box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
   }
+  .w3-sidebar
+  {
+    background-color: #064663;
+  }
   a
   {
     text-decoration: none;
   }
-  .picture
-  {
-    border-radius: 50px;
-  }
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
 </head>
-<body class="w3-black w3-text-white">
+<body class="w3-text-white">
 
 <!-- Top container -->
-<div class="w3-bar w3-top w3-deep-purple w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-black w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i></button>
-  <span class="w3-bar-item w3-left"><a class="nav-link" href="http://www.relaxhardy.com"><img src="/proj/Interface/logo.png" alt="logo" width="32" height="32" class="d-inline-block align-text-top picture">RelaxHardy</a></span>
-  <span class="w3-bar-item w3-left"><a class="nav-link" href="http://www.relaxhardy.com">Tools</a></span>
-  <span class="w3-bar-item w3-right">Log Out</span>
+<div class="w3-bar w3-top w3-large w3-light-blue" style="z-index:4">
+  <button class="w3-bar-item w3-left w3-hover-black w3-button w3-hide-large w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i></button>
+  <span class="w3-bar-item w3-left w3-hover-black"><a class="nav-link" href="http://www.relaxhardy.com"><img src="/proj/Interface/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top">&nbsp;RelaxHardy</a></span>
+  <span class="w3-bar-item w3-left w3-hover-black"><a class="nav-link" href="http://www.relaxhardy.com">Tools</a></span>
+  <span class="w3-bar-item w3-right w3-hover-black">Log Out</span>
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-deep-purple w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
       <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
       <span>Welcome, <strong>Mike</strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-light-blue"><i class="fa fa-envelope"></i></a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-light-blue"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-light-blue"><i class="fa fa-cog"></i></a>
     </div>
   </div>
   <hr>
@@ -56,15 +58,15 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding w3-deep-purple"><i class="fa fa-users fa-fw"></i>Home</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>FD & Interest</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>Loans & EMI</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>TDS & TCS</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>Tax & Its Types</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>Taxable Income</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>Rebate</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>Tax Deduction</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>Tax Exemption</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-users fa-fw"></i>Home</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-eye fa-fw"></i>FD & Interest</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-users fa-fw"></i>Loans & EMI</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-bullseye fa-fw"></i>TDS & TCS</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-diamond fa-fw"></i>Tax & Its Types</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-bell fa-fw"></i>Taxable Income</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-bank fa-fw"></i>Rebate</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue"><i class="fa fa-history fa-fw"></i>Tax Deduction</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" style="background-color:#04293a;"><i class="fa fa-cog fa-fw"></i>Tax Exemption</a>
     <br><br>
   </div>
 </nav>
