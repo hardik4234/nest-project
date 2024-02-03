@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>W3.CSS Template</title>
+<title>Dashboard</title>
 <link rel="icon" type="image/x-icon" href="/proj/Interface/logo.png">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -16,6 +17,7 @@
   }
   .w3-top
   {
+    color: #04293a;
     box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
   }
   .w3-sidebar
@@ -26,16 +28,82 @@
   {
     text-decoration: none;
   }
+  .form-select
+  {
+    color: white;
+    background-color: #04293a ;
+  }
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+<script>
+  function check(){
+    var cookie_data = decodeURIComponent(document.cookie);
+    var token = cookie_data.slice(cookie_data.indexOf("=")+1);
+    if( token != ""){
+    }else{
+      window.location.href= "/sign-in";
+    }
+  }
+
+  function permission(final){
+    if(final == "NULL") return;
+    var cookie_data = decodeURIComponent(document.cookie);
+    var token = cookie_data.slice(cookie_data.indexOf("=")+1);
+    if( token != ""){
+      var obj = `{"token":"${token}"}`;    
+      const caller = new XMLHttpRequest();
+      const url = '/jwt/login';
+      caller.open('POST',url);     
+      caller.setRequestHeader('Content-Type', 'application/json');
+      caller.onload = function() {
+        response_got=JSON.parse(caller.responseText);
+        if(response_got.status==109){
+          document.getElementById("tools").selectedIndex = 0;
+          window.location=final;
+        }else{
+          alert("Login to access the page");
+        }
+      }
+      caller.send(obj);
+    }else{
+      alert("Login to access the page");
+      document.getElementById("tools").selectedIndex = 0;
+    }
+  }
+
+  function permission2(){
+    var cookie_data = decodeURIComponent(document.cookie);
+      var token = cookie_data.slice(cookie_data.indexOf("=")+1);
+      if( token != ""){
+          var obj = `{"token":"${token}"}`;
+  
+          const caller = new XMLHttpRequest();
+          const url = '/jwt/login';
+          caller.open('POST',url);     
+          caller.setRequestHeader('Content-Type', 'application/json');
+          caller.onload = function() {
+              response_got=JSON.parse(caller.responseText);
+              document.getElementById('resp').innerHTML=response_got.message;
+          }
+          caller.send(obj);
+      }
+  }
+
+</script>
 </head>
-<body class="w3-text-white">
+<body onload="check()" class="w3-text-white" onbeforeprint="">
 
 <!-- Top container -->
 <div class="w3-bar w3-top w3-large w3-light-blue" style="z-index:4">
-  <button class="w3-bar-item w3-left w3-hover-black w3-button w3-hide-large w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i></button>
-  <span class="w3-bar-item w3-left w3-hover-black"><a class="nav-link" href="http://www.relaxhardy.com"><img src="/proj/Interface/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top">&nbsp;RelaxHardy</a></span>
-  <span class="w3-bar-item w3-left w3-hover-black"><a class="nav-link" href="http://www.relaxhardy.com">Tools</a></span>
+  <button class="w3-bar-item w3-left w3-button w3-hide-large w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i></button>
+  <span class="w3-bar-item w3-left"><a class="nav-link" href="http://www.relaxhardy.com"><img src="/proj/Interface/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top">&nbsp;RelaxHardy</a></span>
+  <span class="w3-bar-item w3-left" onclick=""><select class="form-select" id="tools" onchange="permission(this.value)">
+    <option value="NULL">Tools</option>
+    <option value="/sign-up">ITR Selector</option>
+    <option value="/sign-up">TDS Calculator</option>
+    <option value="/home">EMI Calculator</option>
+  </select></span>
+  <span class="w3-bar-item w3-left w3-hover-black" onclick="permission2()"><a class="nav-link">Tools</a></span>
   <span class="w3-bar-item w3-right w3-hover-black">Log Out</span>
 </div>
 
@@ -71,7 +139,6 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
 </nav>
 
-
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
@@ -81,6 +148,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
     <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+    <div id="resp"></div>
   </header>
 
   <div class="w3-row-padding w3-margin-bottom">

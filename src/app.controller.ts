@@ -29,6 +29,6 @@ export class AppController {
   
   @Get('home')
   async render_home( @Req() request_in : Request, @Res() response_out: Response) {
-    response_out.sendFile(process.cwd()+'/Interface/pages/home.html');
+    response_out.sendFile(process.cwd()+'/Interface/pages/template.html');
   }
 }
