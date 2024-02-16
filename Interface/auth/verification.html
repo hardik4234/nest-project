@@ -6,56 +6,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
+        body
+        {
+            background-color: #012b3f;
+            padding-top: 2%;
+        }
+        a
+        {
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+        }
+        a:hover
+        {
+            color: black;
+        }
         #detail_box
         {
-            background-color:rgba(86, 38, 231, 0.471);
+            background-color: #064663;
             margin-left: 35%;
             margin-right: 35%;
-            border-radius: 20px;
+            font-size: 20px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
+        }
+        #heading
+        {
+            background-color: #87CEEB;
+            color: #012b3f;
+            width: 100%;
+            text-align: center;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            font-size: 33px;
+        }
+        #credentials
+        {
+            color: white;
             font-size: 20px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
         }
-        #heading
-        {
-            color: rgb(255, 255, 255);
-            background-color: rgb(143, 67, 214);
-            border-radius: 40px;
-            margin-left: 20%;
-            margin-right: 20%;
-            text-align: center;
-            font-family:Georgia, 'Times New Roman', Times, serif;
-        }
-        #text
-        {
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            font-size: 25px;
-            font-weight:bold;
-            color: blueviolet;
-        }
         .textbox
         {
-            color: blueviolet;
-            background-color:rgb(201, 198, 198);
-            font-size: 15px;
-            border-radius: 25px;
+            width: 70%;
+            color: black;
+            font-size: 20px;
         }
         .buttons
         {
-            border-radius: 30px;
+            width:70%;
             border-color: aliceblue;
             font-size: 20px;
             color: rgb(255, 255, 255);
-            background-color: rgb(143, 67, 214);
+            background-color: #04293a;
         }
-        @media screen and (max-width: 700px)
+        .button
         {
-            #detail_box
-            {
-                margin-left: 2%;
-                margin-right: 2%;
-            }
+            margin-top: 2%;
+            border-color: aliceblue;
+            font-size: 17px;
+            color: rgb(255, 255, 255);
+            background-color: #04293a;
+        }
+        #text
+        {
+            color: white;
+            font-size: 20px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+            padding-bottom: 2%;
+        }
+        #error
+        {
+            color: red;
         }
     </style>
     <script>
@@ -64,12 +90,16 @@
 
         function email_confirmation(){
             var cookie_data = decodeURIComponent(document.cookie);
-            if( cookie_data == "" ){
-                window.location.href = "/sign-up";
+            var cookies=decodeURIComponent(document.cookie).split(";");
+            for(var i=0;i<cookies.length;i++){
+                if(cookies[i].includes('mode'))       mode=cookies[i].slice(cookies[i].indexOf("=")+1);
+                else if(cookies[i].includes('email')) email=cookies[i].slice(cookies[i].indexOf("=")+1);
             }
-            mode=cookie_data.substring(cookie_data.indexOf("=")+1,cookie_data.indexOf(";"));
-            email=cookie_data.substring(cookie_data.indexOf("=",5)+1,cookie_data.length);
-            document.getElementById("text").innerText+=` ${email}`;
+            if( !mode || !email ){
+                window.location.href = "/sign-up";
+            }else{
+                document.getElementById("text").innerText+=`OTP sent to ${email}`;
+            }
         }
 
 
@@ -93,8 +123,7 @@
     }
 
     function api_resend(){
-        let message = "Sending...";
-        document.getElementById('error').innerHTML=message;
+        document.getElementById('error').innerHTML="Sending...";
         let obj = `{"mode":"${mode}","email":"${email}"}`;
         const caller = new XMLHttpRequest();
         const url = '/auth/resend';
@@ -117,51 +146,37 @@
         var pass_1 = document.getElementById('password_1').value;
         var pass_2 = document.getElementById('password_2').value;
         var message;
-        if( !otp && !pass_1 && !pass_2 ){
-            message = "Enter the details";
-        }else if( !otp ){
-            if( !pass_1 || !pass_2 ){
-                message = "OTP and Password missing";
+        if( otp.length != 6 && ( pass_1.length < 8 && pass_2.length < 8 )){
+            message = "OTP and Both Passwords Invalid";
+        }else if( otp.length != 6 || pass_1.length < 8 || pass_2.length < 8 ){
+            if( otp.length != 6 ){
+                if( pass_1.length < 8 ||pass_2.length < 8 ){
+                    message = "OTP and One Password Invalid";
+                }else{
+                    message = "OTP Invalid";
+                }
             }else{
-                message = "OTP missing";
+                if( pass_1.length < 8 && pass_2.length < 8 ){
+                    message = "Both Passwords Invalid";
+                }else{
+                    message = "One Password Invalid";
+                }
             }
-        }else if( !pass_1 && !pass_2 ){
-            message = "Set a Password";
-        }else if( !pass_1 || !pass_2 ){
-            message = "Enter your Password in both the Fields";
         }else{
-            if( otp.length != 6 && ( pass_1.length < 8 && pass_2.length < 8 )){
-                message = "OTP and Passwords not valid";
-            }else if( otp.length != 6 || pass_1.length < 8 || pass_2.length < 8 ){
-                if( otp.length != 6 ){
-                    if( pass_1.length < 8 ||pass_2.length < 8 ){
-                        message = "OTP and Either of the Password is invalid";
-                    }else{
-                        message = "OTP Invalid";
-                    }
-                }else{
-                    if( pass_1.length < 8 && pass_2.length < 8 ){
-                        message = "Passwords invalid";
-                    }else{
-                        message = "Either of the Password is invalid";
-                    }
-                }
+            if( pass_1 != pass_2){
+                message = "Passwords not matching";
             }else{
-                if( pass_1 != pass_2){
-                    message = "Passwords not matching";
-                }else{
-                    message = "Processing..."
-                    document.getElementById('error').innerHTML=message;
-                    api_submit();
-                }
+                message = "Verifying....";
+                document.getElementById('error').innerHTML=message;
+                api_submit();
             }
         }
-        return false;
         document.getElementById('error').innerHTML=message;
+        return false;
     }
 
     function api_submit(){
-        const form = document.querySelector("form");
+        const form = document.querySelector("#credentials");
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
         const sender = JSON.stringify(data);            
@@ -174,8 +189,9 @@
         caller.onload = function() {
             response_got=JSON.parse(caller.responseText);
             if( (response_got.status == 102 && mode == "signup") || (response_got.status == 104 && mode == "reset") ){
+                document.getElementById('error').innerHTML=" ";
                 alert(response_got.message);
-                window.location.href = "/";
+                window.location.href = "/sign-in";
             }else{
                 document.getElementById('error').innerHTML=response_got.message;
             }
@@ -185,18 +201,24 @@
     </script>
 </head>
 <body onload="email_confirmation()">
-    <H1 id="heading">VERIFICATION WINDOW</H1> 
-    <p id="text">OTP SENT TO </p> 
-    <div align="center" id="detail_box">
-    <form onsubmit="return check_conditions()" autocomplete="off">
-    Enter your OTP<br><input type="number" name="otp" class="textbox" oninput="check_length('otp')" id="otp" required><br><br>
-    Create Password<br><input type="password" name="password" class="textbox" oninput="check_length('password_1')" id="password_1" required><br><br>
-    ReEnter Password<br><input type="password" class="textbox" oninput="check_length('password_2')" id="password_2" required><br><br>
+    <div id="detail_box">
+    <p id="heading"><a href="/"><img src="/proj/Interface/Assets/Images/logo.png" alt="logo" width="26" height="26"></a> VERIFICATION</p>
+    <p id="text"></p> 
+    <form id="credentials" onsubmit="return check_conditions()">
+    Enter your OTP<br>
+    <input type="number"   class="textbox" oninput="check_length('otp')"        id="otp"        required name="otp">
+    <br><br>
+    Create Password<br>
+    <input type="password" class="textbox" oninput="check_length('password_1')" id="password_1" required name="password" >
+    <br><br>
+    ReEnter Password<br>
+    <input type="password" class="textbox" oninput="check_length('password_2')" id="password_2" required>
+    <br><br>
     <p id="error"><br></p>
-    <input type="reset" value="  Clear  " class="buttons">
-    <input type="submit" value=" Proceed " class="buttons"><br><br>
+    <input type="submit" value=" Proceed " class="buttons"><br>
+    <input type="reset" value="  Clear  " class="button"><br><br>
 </form>
+<p id="text">OTP not received ?<br><input type="button" value=" Resend " class="button" onclick="api_resend()"></p>
 </div>
-<p id="text">DIDN'T RECEIVE THE OTP ?<br><input type="button" value=" Resend " class="buttons" onclick="api_resend()"></p>
 </body>
 </html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="icon" type="image/x-icon" href="/proj/Interface/Assets/Images/logo.png">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/proj/Interface/Assets/css/template.css">
+<link rel="stylesheet" href="/proj/Interface/Assets/css/homepage.css">
+<style>
+body
+  {
+    color: white;
+    background-color: #04293a;
+  }
+  .w3-top
+  {
+    color: #04293a;
+    box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
+  }
+  .w3-sidebar
+  {
+    background-color: #064663;
+  }
+  a
+  {
+    text-decoration: none;
+  }
+  @media screen and (max-width: 500px)
+  {
+    .responsive
+    {
+      display:none;
+    }
+  }
+  .form-select
+  {
+    color: white;
+    background-color: #04293a ;
+  }
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5
+  {
+    font-family: "Raleway", sans-serif
+  }
+  .w3-hover-light-blue:active
+  {
+    background-color: #04293a;;
+  }
+
+.empty
+{
+  background-image: url("/proj/Interface/Assets/Images/background.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 600px;
+  max-width: 100%;
+}
+.w3-quarter
+  {
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
+  }
+  .w3-quarter:hover
+  {
+    transform: scale(1.07);
+  }
+  .w3-quarter h5
+  {
+    display: none;
+  }
+  .my-tools
+  {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 90% 90%;
+    height:250px;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
+  }
+  #my-tool-1
+  {
+    background-image: url("/proj/Interface/Assets/Images/tool1.png");
+  }
+  #my-tool-2
+  {
+    background-image: url("/proj/Interface/Assets/Images/tool2.png");
+  }
+  #my-tool-3
+  {
+    background-image: url("/proj/Interface/Assets/Images/tool3.png");
+  }
+  #my-tool-4
+  {
+    background-image: url("/proj/Interface/Assets/Images/tool4.png");
+  }
+  #my-tool-1:hover
+  {
+    background-image: none;
+    h5
+    {
+      display: block;
+    }
+  }
+  #my-tool-2:hover
+  {
+    background-image: none;
+    h5
+    {
+      display: block;
+    }
+  }
+  #my-tool-3:hover
+  {
+    background-image: none;
+    h5
+    {
+      display: block;
+    }
+  }
+  #my-tool-4:hover
+  {
+    background-image: none;
+    h5
+    {
+      display: block;
+    }
+  }
+  .about-us
+  {
+    min-height: 500px;
+  }
+
+</style>
+<script>
+
+var token = "";
+var tool = "";
+var page = "";
+var user_status = "";
+
+//function to extract the values of the 3 cookies already stored
+function starters(){
+  if(document.cookie != ""){
+    var cookies=decodeURIComponent(document.cookie).split(";");
+    for(var i=0;i<cookies.length;i++){
+      if(cookies[i].includes('token'))     token=cookies[i].slice(cookies[i].indexOf("=")+1);
+      else if(cookies[i].includes('tool')) tool=cookies[i].slice(cookies[i].indexOf("=")+1);
+      else if(cookies[i].includes('page')) page=cookies[i].slice(cookies[i].indexOf("=")+1);
+    }
+  }
+}
+
+function token_detector(){
+  var obj = `{"token":"${token}"}`;
+  const caller = new XMLHttpRequest();
+  const url = '/jwt/login';
+  caller.open('POST',url);
+  caller.setRequestHeader('Content-Type', 'application/json');
+  caller.onload = function() {
+    response_got=JSON.parse(caller.responseText);
+    if( response_got.status === 109 ){
+      user_status="login";
+      document.getElementById('auth').innerHTML="Sign Out";
+    }else{
+      user_status="logout"; 
+      document.getElementById('auth').innerHTML="Sign In";
+    }
+  }
+  caller.send(obj);
+}
+
+function render_main(opener){
+  switch(opener) {
+    case 'T1':
+    case 'T2':
+    case 'T3':
+    case 'T4':
+      starters();
+      token_detector();
+      if( user_status == "logout" ){
+        alert("Sign-in required !");
+        document.getElementById("tools").selectedIndex = 0;
+        return;
+      }else{
+        cookie_setting(opener,'/auth/cookie/tool')
+        //render_tool();
+      }
+    break;
+    case 'NULL':
+      //render_page();
+    break;
+    default:
+      cookie_setting(opener,'/auth/cookie/page')
+      //render_page();
+      document.getElementById("tools").selectedIndex = 0;
+  }
+}
+
+function cookie_setting(opener,url){
+  const caller = new XMLHttpRequest();
+  var obj = `{"data":"${opener}"}`;
+  caller.open('POST',url);     
+  caller.setRequestHeader('Content-Type', 'application/json');
+  caller.onload = function() {
+      response_got=JSON.parse(caller.responseText);
+      alert(response_got.message);
+  }
+  caller.send(obj);
+}
+
+function render_page(opener){
+    switch(opener) {
+        case 'A1':
+          // code block
+        break;
+        case 'A2':
+          // code block
+        break;
+        case 'A3':
+          // code block
+        break;
+        case 'A4':
+          // code block
+        break;
+        case 'A5':
+          // code block
+        break;
+        case 'A6':
+          // code block
+        break;
+        case 'A7':
+          // code block
+        break;
+        default:
+          // code block
+      }
+}
+
+function render_tool(opener){
+    switch(opener) {
+        case 'A1':
+          // code block
+        break;
+        case 'A2':
+          // code block
+        break;
+        case 'A3':
+          // code block
+        break;
+        case 'A4':
+          // code block
+        break;
+        default:
+          // code block
+      }
+}
+
+//statements to be executed automatically
+starters();
+token_detector();
+if(user_status=="login") render_tool();
+else                     render_page();
+
+function change_status(){
+  starters();
+  token_detector();
+  if(user_status=="login"){
+    document.cookie="token=";
+    alert(document.cookie);
+    starters();
+    token_detector();
+  }else{
+    window.location='/sign-in';
+  }
+}
+
+</script>
+</head>
+<body class="w3-text-white">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-large w3-light-blue" style="z-index:4">
+  <span class="w3-bar-item w3-left w3-hide-large" onclick="w3_open();"><i class="fa fa-bars"></i></span>
+  <span class="w3-bar-item w3-left"><a class="nav-link" href="/"><img src="/proj/Interface/Assets/Images/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top"><span class="responsive">&nbsp;RelaxHardy</span></a></span>
+  <span class="w3-bar-item w3-left" onclick=""><select class="form-select" id="tools" onchange="render_main(this.value)">
+    <option value="NULL">Tools</option>
+    <option value="T1">TDS Calculator</option>
+    <option value="T2">EMI Calculator</option>
+    <option value="T3">ITR Selector</option>
+    <option value="T4">Tax Planner</option>
+  </select></span>
+  <span class="w3-bar-item w3-right" id="auth" onclick="change_status()">....</span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container">
+    <h4>Topics to study</h4>
+  </div>
+  <div class="w3-bar-block">
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" style="background-color:#04293a;"><i class="fa fa-users fa-fw"></i>Home</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P1')"><i class="fa fa-diamond fa-fw"></i>Tax & Its Types</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P2')"><i class="fa fa-bullseye fa-fw"></i>TDS & TCS</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P3')"><i class="fa fa-eye fa-fw"></i>FD & Interest</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P4')"><i class="fa fa-users fa-fw"></i>Loans & EMI</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P5')"><i class="fa fa-bell fa-fw"></i>Taxable Income</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P6')"><i class="fa fa-bank fa-fw"></i>Rebate</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P7')"><i class="fa fa-history fa-fw"></i>Tax Deduction</a>
+    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P8')"><i class="fa fa-cog fa-fw"></i>Tax Exemption</a>
+    <br><br>
+  </div>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:30px">
+  </header>
+
+
+  <div class="empty w3-display-container">
+    <div class="w3-display-middle w3-center">
+      <h1 class="w3-jumbo">RELAXHARDY</h1>
+      <h5><b>Your personal finance and tax guide.</b></h5>
+      <h5><b>The solution to all your finance related queries is here.</b></h5>
+      <h5><b>Our interactive and easy to use tools can help in tax planning.</b></h5>
+      <h5><b>We are here to provide you the basic knowledge of finance and tax.</b></h5>
+    </div>
+    <div></div>
+  </div>
+
+  <br><hr><br>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter">
+      <div class="w3-container w3-light-blue my-tools w3-text-black w3-padding-16" id="my-tool-1">
+        <div class="w3-clear"></div>
+        <h3>EMI Calculator</h3>
+        <h5>A tool that gives you a detailed report of Tax Deducted in FDs annnually so as to help you in prevention of the deduction.</h5>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-light-blue my-tools w3-text-black w3-padding-16" id="my-tool-2">
+        <div class="w3-clear"></div>
+        <h3>TDS Calculator</h3>
+        <h5>A tool that gives you a detailed report of Tax Deducted in FDs annnually so as to help you in prevention of the deduction.</h5>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-light-blue my-tools w3-text-black w3-padding-16" id="my-tool-3">
+        <div class="w3-clear"></div>
+        <h3>ITR Selector</h3>
+        <h5>A tool that helps in the selection of the ITR based on the different sources of income.</h5>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-light-blue my-tools w3-text-black w3-padding-16" id="my-tool-4">
+        <div class="w3-clear"></div>
+        <h3>Tax Planner</h3>
+        <h5>A tool that claculates the tax to be paid based on the total taxable income and and suggests methods to reduce the same.</h5>
+      </div>
+    </div>
+  </div>
+
+  <br><hr><br>
+
+  <!-- Team Container -->
+<div class="w3-container w3-padding-64 w3-center" id="team">
+  <h2>OUR TEAM</h2><br>
+  
+  <div class="w3-row"><br>
+  
+  <div class="w3-third">
+    <img src="/proj/Interface/Assets/Images/hardik.jpg" alt="image1" style="width:45%" class="w3-circle w3-hover-opacity">
+    <h3>Hardik Pandey</h3>
+    <p>Web Developer</p>
+  </div>
+  <div class="w3-third">
+    <img src="/proj/Interface/Assets/Images/harsh.jpg" alt="image2" style="width:45%" class="w3-circle w3-hover-opacity">
+    <h3>Harsh Raj</h3>
+    <p>Finance Advisor</p>
+  </div>
+  <div class="w3-third">
+    <img src="/proj/Interface/Assets/Images/kishlay.jpg" alt="image3" style="width:45%" class="w3-circle w3-hover-opacity">
+    <h3>Kishlay Kumar</h3>
+    <p>Web Designer</p>
+  </div>
+
+</div>
+</div>
+  
+<br>
+
+  <div class="about-us w3-container w3-white">
+    <div class="w3-center">
+    <h2>Contact</h2>
+    <i class="fa fa-map-marker" style="width:30px"></i>Chennai, Tamil Nadu<br>
+    <i class="fa fa-phone" style="width:30px"></i> Phone: +91 9999999999<br>
+    <i class="fa fa-envelope" style="width:30px"></i> Email: mail@mail.com<br>
+    </div>
+    <br><br>
+    <form action="/">
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="Name"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Email" required name="Email"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message" required name="Message"></p>
+      <p><button class="w3-button w3-black w3-padding-large" type="submit">SEND MESSAGE</button></p>
+    </form>
+  <div>
+
+  <!-- End page content -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

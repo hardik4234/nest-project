@@ -7,6 +7,7 @@ import { DetailsDto } from 'src/DTOs/details.dto';
 import { OtpDto } from 'src/DTOs/otp.dto';
 import { CredentialsDto } from 'src/DTOs/credentials.dto';
 import { ResetDto } from 'src/DTOs/reset.dto';
+import { DataDto } from 'src/DTOs/data.dto';
 import { JWTService } from 'src/JWT/jwt.service';
 
 @Controller('auth')
@@ -56,8 +57,8 @@ export class AuthController {
       }else{
         var result = await this.authService.details_passed(details);
         if(result.status == 101){
-          response_out.cookie('mode','signup',{ maxAge: 10*1000 });
-          response_out.cookie('email',details.email,{ maxAge: 10*1000 });
+          response_out.cookie('mode','signup',{ maxAge: 5*1000 });
+          response_out.cookie('email',details.email,{ maxAge: 5*1000 });
         }
         response_out.json(result);
       }
@@ -95,8 +96,8 @@ export class AuthController {
           response_out.json(await this.authService.email_passed_for_signup(reset.email) );
         }
         if( reset.mode == "reset"){
-          response_out.cookie('mode','reset',{ maxAge: 10*1000 });
-          response_out.cookie('email',reset.email,{ maxAge: 10*1000 });
+          response_out.cookie('mode','reset',{ maxAge: 5*1000 });
+          response_out.cookie('email',reset.email,{ maxAge: 5*1000 });
           response_out.json(await this.authService.email_passed_for_reset(reset.email));
         }
       }
@@ -150,12 +151,17 @@ export class AuthController {
           "message":"Password Missing"
         });
       }else{
+        var data;
         if( verificator.mode == "signup" ){
-          response_out.json( await this.authService.otp_passed_for_signup(verificator) );
+          data = await this.authService.otp_passed_for_signup(verificator); 
+        }else if( verificator.mode == "reset" ){
+          data = await this.authService.otp_passed_for_reset(verificator);
         }
-        if( verificator.mode == "reset" ){
-          response_out.json( await this.authService.otp_passed_for_reset(verificator) );
+        if( data.status === 102  || data.status === 104 ){
+          var token = await this.jwtService.generate_AT(verificator.email);
+          response_out.cookie('token',token,{ maxAge: 60*1000*10 });
         }
+        response_out.json( data );
       }
     }catch{
       response_out.json({
@@ -190,7 +196,7 @@ export class AuthController {
         var result = await this.authService.credentials_passed(credentials);
         if( result.status==108 ){
           var token = await this.jwtService.generate_AT(credentials.email);
-          response_out.cookie('token',token,{ maxAge: 60*1000 });
+          response_out.cookie('token',token,{ maxAge: 60*1000*10 });
         }
         response_out.json(result);
       }
@@ -203,6 +209,54 @@ export class AuthController {
   }
   
   //..........................................................................................................................
+
+  @Post('cookie/tool')
+  async tool_cookie(@Body() info : DataDto,@Res() response_out: Response) : Promise<any> {
+    try{
+      if( !info || !info.data ){
+        response_out.json({
+          "status":0,
+          "message":"Data Missing"
+        });
+      }else{
+        response_out.cookie('tool',info.data,{ maxAge: 20*1000 });
+        response_out.json({
+          "status":234,
+          "message":"Cookie Set"
+        });
+      }
+    }catch{
+      response_out.json({
+        "status":999,
+        "message":"Server Error"
+      });
+    }
+  }
+
+  @Post('cookie/page')
+  async page_cookie(@Body() info : DataDto,@Res() response_out: Response) : Promise<any> {
+    try{
+      if( !info || !info.data ){
+        response_out.json({
+          "status":0,
+          "message":"Data Missing"
+        });
+      }else{
+        response_out.cookie('page',info.data,{ maxAge: 20*1000 });
+        response_out.json({
+          "status":234,
+          "message":"Cookie Set"
+        });
+      }
+    }catch{
+      response_out.json({
+        "status":999,
+        "message":"Server Error"
+      });
+    }
+  }
+
+  //................................................................................................
 
   @Get('working')
   async demo(){

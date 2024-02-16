@@ -6,31 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
+        body
+        {
+            background-color: #012b3f;
+            padding-top: 1%;
+        }
+        a
+        {
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+        }
+        a:hover
+        {
+            color: black;
+        }
         #detail_box
         {
-            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
-            background-size: cover;
-            margin-left: 20%;
-            margin-right: 20%;
-            border-radius: 20px;
-            color: #ffffff;
+            background-color: #064663;
+            margin-left: 32%;
+            margin-right: 32%;
             font-size: 25px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
-        }
-        #form
-        {
-            margin-left: 50%;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
         }
         #heading
         {
-            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
-            color: rgb(255, 255, 255);
-            border-radius: 40px;
-            margin-left: 20%;
-            margin-right: 20%;
+            background-color: #87CEEB;
+            color: #012b3f;
+            width: 100%;
             text-align: center;
             font-family:Georgia, 'Times New Roman', Times, serif;
+            font-size: 33px;
         }
         #text
         {
@@ -42,72 +52,43 @@
         }
         .textbox
         {
-            color: rgb(138, 70, 206);
-            font-size: 25px;
-            align-items:last baseline;
-            border-radius: 25px;
+            width: 70%;
+            color: black;
+            font-size: 20px;
         }
         .buttons
         {
-            border-radius: 30px;
+            width:70%;
             border-color: aliceblue;
             font-size: 20px;
             color: rgb(255, 255, 255);
-            background-color: rgb(138, 70, 206);
+            background-color: #04293a;
         }
-        @media screen and (max-width: 621px)
+        .button
         {
-            #detail_box
-            {
-                margin-left: 2%;
-                margin-right: 2%;
-            }
-            #form
-            {
-                margin-left: 7%;
-                margin-right: 7%;
-                text-align: center;
-            }
-            .textbox
-            {
-                font-size: 15px;
-            }
+            margin-top: 2%;
+            border-color: aliceblue;
+            font-size: 17px;
+            color: rgb(255, 255, 255);
+            background-color: #04293a;
         }
-        @media screen and (max-width: 700px)
+        .text
         {
-            .textbox
-            {
-                font-size: 17px;
-            }
+            color: white;
+            font-size: 20px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+            padding-bottom: 2%;
         }
-        @media screen and (max-width: 800px)
+        #error
         {
-            .textbox
-            {
-                font-size: 20px;
-            }
-        }
-        @media screen and (max-width: 900px)
-        {
-            .textbox
-            {
-                font-size: 22px;
-            }
-        }
-        @media screen and (max-width: 1085px)
-        {
-            #form
-            {
-                margin-left: 7%;
-                margin-right: 7%;
-                text-align: center;
-            }
+            color: red;
         }
     </style>
     <script>
         function api_details(){
             document.getElementById('error').innerHTML='Processing...';
-            const form = document.querySelector("form");
+            const form = document.querySelector("#credentials");
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
             const sender = JSON.stringify(data);
@@ -129,10 +110,9 @@
     </script>
 </head>
 <body>
-    <H1 id="heading">SIGN-UP WINDOW</H1> 
-    <p id="text">ENTER YOUR DETAILS</p>
-    <div id="detail_box"><br>
-    <form id="form" onsubmit="return api_details()" autocomplete="off">
+    <div id="detail_box">
+    <p id="heading"><a href="/"><img src="/proj/Interface/Assets/Images/logo.png" alt="logo" width="26" height="26"></a> SIGN-UP</p> 
+    <form id="credentials" onsubmit="return api_details()">
     Email<br>
     <input type="email" name="email" class="textbox" required><br><br>
     First Name<br>
@@ -146,10 +126,10 @@
 	<input type="radio" name='gender' value="Female" id="female"><label for="female">Female</label><br>
 	<input type="radio" name='gender' value="Prefer Not to Answer" id="na"><label for="na">Other</label><br>
     <p id="error"><br></p>
-    <input type="reset" value="CLEAR" class="buttons">
-    <input type="submit" value="GENERATE" class="buttons"><br><br>
+    <input type="submit" value="GENERATE" class="buttons"><br>
+    <input type="reset" value="CLEAR" class="button"><br><br>
+    <p class="text">Alerady a User? <a href="/sign-in">Sign In</a></p>
     </div>
     </form>
-    <p id="text">ALREADY A USER ? <a href="/sign-in"><input type="button" value="SIGN IN" class="buttons"></a></p>
 </body>
 </html>

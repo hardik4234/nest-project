@@ -5,119 +5,88 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
+        html
+        {
+            scroll-behavior: smooth;
+        }
+        body
+        {
+            background-color: #012b3f;
+            padding-top: 2%;
+        }
+        a
+        {
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+        }
+        a:hover
+        {
+            color: black;
+        }
         #detail_box
         {
-            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
-            background-size: cover;
-            margin-left: 20%;
-            margin-right: 20%;
-            border-radius: 20px;
+            background-color: #064663;
+            margin-left: 32%;
+            margin-right: 32%;
             font-size: 25px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
             color: #ffffff;
-        }
-        #credentials
-        {
-            margin-left: 50%;
+            text-align: center;
+            box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
         }
         #heading
         {
-            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
-            color: rgb(255, 255, 255);
-            border-radius: 40px;
-            margin-left: 20%;
-            margin-right: 20%;
+            background-color: #87CEEB;
+            color: #012b3f;
+            width: 100%;
             text-align: center;
             font-family:Georgia, 'Times New Roman', Times, serif;
             font-size: 33px;
         }
-        #text
-        {
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            font-size: 25px;
-            font-weight:bold;
-            color: rgb(138, 70, 206);
-        }
         .textbox
         {
-            color: rgb(138, 70, 206);
-            font-size: 25px;
-            border-radius: 25px;
+            width: 70%;
+            color: black;
+            font-size: 20px;
         }
         .buttons
         {
-            border-radius: 30px;
+            width:70%;
             border-color: aliceblue;
             font-size: 20px;
             color: rgb(255, 255, 255);
-            background-color: rgb(138, 70, 206);
+            background-color: #04293a;
+        }
+        .button
+        {
+            margin-top: 2%;
+            border-color: aliceblue;
+            font-size: 17px;
+            color: rgb(255, 255, 255);
+            background-color: #04293a;
         }
         #reset
         {
-            background-image: linear-gradient(to bottom right, rgb(2, 110, 225), rgb(138, 70, 206), rgb(255, 0, 140));
-            margin-left: 20%;
-            margin-right: 20%;
+            margin-left: 32%;
+            margin-right: 32%;
+            color: white;
+            background-color: #064663;
             border-radius: 20px;
-            font-size: 25px;
+            font-size: 20px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
-            color: #ffffff;
         }
-        @media screen and (max-width: 621px)
+        .text
         {
-            #detail_box
-            {
-                margin-left: 2%;
-                margin-right: 2%;
-            }
-            #credentials
-            {
-                margin-left: 7%;
-                margin-right: 7%;
-                text-align: center;
-            }
-            .textbox
-            {
-                font-size: 15px;
-            }
-            #reset
-            {
-                margin-left: 2%;
-                margin-right: 2%;
-            }
-        }
-        @media screen and (max-width: 700px)
-        {
-            .textbox
-            {
-                font-size: 17px;
-            }
-        }
-        @media screen and (max-width: 800px)
-        {
-            .textbox
-            {
-                font-size: 20px;
-            }
-        }
-        @media screen and (max-width: 900px)
-        {
-            .textbox
-            {
-                font-size: 22px;
-            }
-        }
-        @media screen and (max-width: 1085px)
-        {
-            #credentials
-            {
-                margin-left: 7%;
-                margin-right: 7%;
-                text-align: center;
-            }
+            color: white;
+            font-size: 20px;
+            font-family:'Courier New', Courier, monospace;
+            font-weight: bold;
+            padding-bottom: 2%;
         }
         </style>
     <script>
@@ -138,7 +107,7 @@
                 response_got=JSON.parse(caller.responseText);
                 console.log(response_got.message);
                 if( response_got.status === 109 ){
-                    window.location.href = "/home";
+                    window.location.href = "/";
                 }
             }
             caller.send(obj);
@@ -151,10 +120,12 @@
             document.getElementById('reset').innerHTML = `<br>
             Enter Your Email <input type="email" name="email" class="textbox" required>
             <br><br>
-            <input type="reset" value="CLEAR" class="buttons">  <input type="submit" value="SEND OTP" class="buttons">
+            <input type="submit" value="SEND OTP" class="buttons"><br><input type="reset" value="CLEAR" class="button">
             <br><br>`;
             reset_loaded=true;
+            document.getElementById('reset').scrollIntoView();
         }else{
+            document.getElementById('credentials').scrollIntoView();
             document.getElementById('reset').innerHTML = ``;
             reset_loaded=false;
         }
@@ -209,23 +180,20 @@
     </script>
 </head>
 <body onload="auto_detect()">
-    <p id="heading">SIGN-IN WINDOW</p> 
-    <p id="text">ENTER YOUR CREDENTIALS</p>
     <div id="detail_box">
-    <br>
-    <form id="credentials" onsubmit="return api_credentials()" autocomplete="off">
+    <p id="heading"><a href="/"><img src="/proj/Interface/Assets/Images/logo.png" alt="logo" width="26" height="26"></a> SIGN IN</p>
+    <form id="credentials" onsubmit="return api_credentials()">
     Email<br>
     <input type="email" name="email" class="textbox" required><br><br>
     Password<br>
     <input type="password" name="password" class="textbox" required><br>
     <p id="error"><br></p>
-    <input type="reset" value="CLEAR" class="buttons">
-    <input type="submit" value="SIGN IN" class="buttons"><br><br>
+    <input type="submit" value="SIGN IN" class="buttons"><br>
+    <input type="reset" value="CLEAR" class="button"><br><br>
+    <div class="w3-row-padding text"><div class="w3-left">New Here?<a href="/sign-up">Sign Up</a></div><div class="w3-right"><a onclick="reset_section()">Forgot Password?</a></div></div>
     </form>
     </div>
     <p id="text">
-        NOT YET SIGNED UP ?<a href="/sign-up"><br><input type="button" value="SIGN UP" class="buttons"></a><br>
-        FORGOT PASSWORD ?<br><input type="button" value="RESET" class="buttons" onclick="reset_section()"> 
         <form id="reset" onsubmit="return api_reset()" align="center"></form>
     </p>
 </body>

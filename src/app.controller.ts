@@ -9,7 +9,7 @@ export class AppController {
 
   @Get()
   async render_working_page( @Req() request_in : Request, @Res() response_out: Response) {
-    response_out.sendFile(process.cwd()+'/Interface/pages/welcome.html');
+    response_out.sendFile(process.cwd()+'/Interface/main.html');
   }
   
   @Get('sign-in')
@@ -27,8 +27,4 @@ export class AppController {
     response_out.sendFile(process.cwd()+'/Interface/auth/verification.html');
   }
   
-  @Get('home')
-  async render_home( @Req() request_in : Request, @Res() response_out: Response) {
-    response_out.sendFile(process.cwd()+'/Interface/pages/template.html');
-  }
 }
