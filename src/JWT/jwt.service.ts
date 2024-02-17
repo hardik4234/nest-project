@@ -12,10 +12,10 @@ export class JWTService {
       "iss": "relaxhardy.com",
       "aud": email
     };
-    return await JWT.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "60s" });
+    return await JWT.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "600s" });
   }
 
-  async verify_AT(token: string): Promise<any> {              //verifying Refresh Token and returns payload
+  async verify_AT(token: string): Promise<any> {              //verifying Token and returns payload
     try {
       if (await JWT.verify(token, process.env.ACCESS_TOKEN_SECRET)) {
         return {

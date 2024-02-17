@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/proj/Interface/Assets/css/template.css">
-<link rel="stylesheet" href="/proj/Interface/Assets/css/homepage.css">
 <style>
 body
   {
@@ -150,7 +148,7 @@ var page = "";
 var user_status = "";
 
 //function to extract the values of the 3 cookies already stored
-function starters(){
+function value_setter(){
   if(document.cookie != ""){
     var cookies=decodeURIComponent(document.cookie).split(";");
     for(var i=0;i<cookies.length;i++){
@@ -161,7 +159,7 @@ function starters(){
   }
 }
 
-function token_detector(){
+function token_verifier(){
   var obj = `{"token":"${token}"}`;
   const caller = new XMLHttpRequest();
   const url = '/jwt/login';
@@ -180,20 +178,20 @@ function token_detector(){
   caller.send(obj);
 }
 
-function render_main(opener){
-  switch(opener) {
+function render_main(page_code){
+  switch(page_code) {
     case 'T1':
     case 'T2':
     case 'T3':
     case 'T4':
-      starters();
-      token_detector();
+      value_setter();
+      token_verifier();
       if( user_status == "logout" ){
         alert("Sign-in required !");
         document.getElementById("tools").selectedIndex = 0;
         return;
       }else{
-        cookie_setting(opener,'/auth/cookie/tool')
+        cookie_setting(page_code,'/auth/cookie/tool')
         //render_tool();
       }
     break;
@@ -201,15 +199,15 @@ function render_main(opener){
       //render_page();
     break;
     default:
-      cookie_setting(opener,'/auth/cookie/page')
+      cookie_setting(page_code,'/auth/cookie/page')
       //render_page();
       document.getElementById("tools").selectedIndex = 0;
   }
 }
 
-function cookie_setting(opener,url){
+function cookie_setting(page_code,url){
   const caller = new XMLHttpRequest();
-  var obj = `{"data":"${opener}"}`;
+  var obj = `{"data":"${page_code}"}`;
   caller.open('POST',url);     
   caller.setRequestHeader('Content-Type', 'application/json');
   caller.onload = function() {
@@ -219,8 +217,8 @@ function cookie_setting(opener,url){
   caller.send(obj);
 }
 
-function render_page(opener){
-    switch(opener) {
+function render_page(page_code){
+    switch(page_code) {
         case 'A1':
           // code block
         break;
@@ -247,8 +245,8 @@ function render_page(opener){
       }
 }
 
-function render_tool(opener){
-    switch(opener) {
+function render_tool(page_code){
+    switch(page_code) {
         case 'A1':
           // code block
         break;
@@ -267,19 +265,19 @@ function render_tool(opener){
 }
 
 //statements to be executed automatically
-starters();
-token_detector();
+value_setter();
+token_verifier();
 if(user_status=="login") render_tool();
 else                     render_page();
 
 function change_status(){
-  starters();
-  token_detector();
+  value_setter();
+  token_verifier();
   if(user_status=="login"){
     document.cookie="token=";
     alert(document.cookie);
-    starters();
-    token_detector();
+    value_setter();
+    token_verifier();
   }else{
     window.location='/sign-in';
   }

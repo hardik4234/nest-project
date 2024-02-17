@@ -14,7 +14,6 @@
         body
         {
             background-color: #012b3f;
-            padding-top: 2%;
         }
         a
         {
@@ -29,8 +28,8 @@
         #detail_box
         {
             background-color: #064663;
-            margin-left: 32%;
-            margin-right: 32%;
+            margin:auto;
+            width:500px;
             font-size: 25px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
@@ -49,13 +48,13 @@
         }
         .textbox
         {
-            width: 70%;
+            width: 345px;
             color: black;
             font-size: 20px;
         }
         .buttons
         {
-            width:70%;
+            width: 300px;
             border-color: aliceblue;
             font-size: 20px;
             color: rgb(255, 255, 255);
@@ -71,8 +70,8 @@
         }
         #reset
         {
-            margin-left: 32%;
-            margin-right: 32%;
+            margin:auto;
+            width:500px;
             color: white;
             background-color: #064663;
             border-radius: 20px;
@@ -87,6 +86,30 @@
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
             padding-bottom: 2%;
+        }
+        #error
+        {
+            color: red;
+            font-size: 17px;
+        }
+        @media only screen and (max-width: 525px)
+        {
+            #detail_box,
+            #reset
+            {
+                width:93%;
+            }
+            .textbox,
+            .buttons,
+            #reset
+            {
+                font-size: 19px;
+            }
+            .text,
+            a
+            {
+                font-size: 17px;
+            }
         }
         </style>
     <script>
