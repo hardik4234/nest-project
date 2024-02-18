@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png">
     <style>
         body
         {
@@ -28,7 +29,7 @@
             font-size: 25px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
-            color: #ffffff;
+            color: white;
             text-align: center;
             box-shadow: 0px 5px 20px 0px rgb(0, 0, 0);
         }
@@ -52,7 +53,7 @@
             width: 300px;
             border-color: aliceblue;
             font-size: 20px;
-            color: rgb(255, 255, 255);
+            color: white;
             background-color: #04293a;
         }
         .button
@@ -60,7 +61,7 @@
             margin-top: 2%;
             border-color: aliceblue;
             font-size: 17px;
-            color: rgb(255, 255, 255);
+            color: white;
             background-color: #04293a;
         }
         .text
@@ -120,8 +121,8 @@
 </head>
 <body>
     <div id="detail_box">
-    <p id="heading"><a href="/"><img src="/proj/Interface/Assets/Images/logo.png" alt="logo" width="26" height="26"></a> SIGN-UP</p> 
-    <form id="credentials" onsubmit="return api_details()">
+    <p id="heading"><a href="/"><img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png" alt="logo" width="26" height="26"></a> SIGN-UP</p> 
+    <form id="credentials" onsubmit="return api_details()" autocomplete="off">
     Email<br>
     <input type="email" name="email" class="textbox" required><br><br>
     First Name<br>
