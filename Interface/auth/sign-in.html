@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="icon" type="image/x-icon" href="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
         html
         {
@@ -79,14 +78,24 @@
             font-size: 20px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
+            text-align: center;
         }
         .text
         {
+            width: 100%;
             color: white;
             font-size: 20px;
             font-family:'Courier New', Courier, monospace;
             font-weight: bold;
             padding-bottom: 2%;
+        }
+        .left
+        {
+            float:left;
+        }
+        .right
+        {
+            float: right;
         }
         #error
         {
@@ -208,17 +217,20 @@
     <p id="heading"><a href="/"><img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png" alt="logo" width="26" height="26"></a> SIGN IN</p>
     <form id="credentials" onsubmit="return api_credentials()">
     Email<br>
-    <input type="email" name="email" class="textbox" required><br><br>
+    <input type="email"    class="textbox" name="email" required><br><br>
     Password<br>
-    <input type="password" name="password" class="textbox" required><br>
+    <input type="password" class="textbox" name="password" required><br>
     <p id="error"><br></p>
-    <input type="submit" value="SIGN IN" class="buttons"><br>
-    <input type="reset" value="CLEAR" class="button"><br><br>
-    <div class="w3-row-padding text"><div class="w3-left">New Here?<a href="/sign-up">Sign Up</a></div><div class="w3-right"><a onclick="reset_section()">Forgot Password?</a></div></div>
-    </form>
+    <input type="submit"   class="buttons" value="SIGN IN"><br>
+    <input type="reset"    class="button"  value="CLEAR"><br><br>
+    <div class="text">
+        <div class="left">&nbsp;New Here?<a href="/sign-up">Sign Up</a></div>
+        <div class="right"><a onclick="reset_section()">Forgot Password?&nbsp;</a></div>
+    </div>
+    </form><br>
     </div>
     <p id="text">
-        <form id="reset" onsubmit="return api_reset()" align="center"></form>
+        <form id="reset" onsubmit="return api_reset()"></form>
     </p>
 </body>
 </html>
