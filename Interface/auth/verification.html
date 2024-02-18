@@ -208,11 +208,11 @@
     }
     </script>
 </head>
-<body onload="email_confirmation()">
+<body onload="email_confirmation()" autocomplete="off">
     <div id="detail_box">
     <p id="heading"><a href="/"><img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png" alt="logo" width="26" height="26"></a> VERIFICATION</p>
     <p id="text"></p> 
-    <form id="credentials" onsubmit="return check_conditions()" autocomplete="off">
+    <form id="credentials" onsubmit="return check_conditions()">
     Enter your OTP<br>
     <input type="number"   class="textbox" oninput="check_length('otp')"        id="otp"        required name="otp">
     <br><br>
