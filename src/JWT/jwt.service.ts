@@ -12,7 +12,7 @@ export class JWTService {
       "iss": "relaxhardy.com",
       "aud": email
     };
-    return await JWT.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "600s" });
+    return await JWT.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "36000s" });
   }
 
   async verify_AT(token: string): Promise<any> {              //verifying Token and returns payload
@@ -35,5 +35,4 @@ export class JWTService {
       };
     }
   }
-
-}  
+}
