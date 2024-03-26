@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { MongoClient} from 'mongodb';
 import { DetailsDto } from 'src/DTOs/details.dto';
 import { CredentialsDto } from 'src/DTOs/credentials.dto';
+import { QueryDto } from 'src/DTOs/query.dto';
 
 @Injectable()
 export class MongoService {
@@ -194,6 +195,12 @@ export class MongoService {
   }
 
   //...........................................................................................................
+
+  async query(query : Object) :Promise<any> {
+    await this.connect.db('user-all').collection('query').insertOne(query);
+  }
+
+//.....................................................................................
 
   async demo_func() :Promise<any>{
     await this.connect.db('new').createCollection('demo');
