@@ -1,11 +1,14 @@
-import { Controller, Get, Req, Res, Body} from '@nestjs/common';
+import { Controller, Get, Req, Res, Body, Post} from '@nestjs/common';
 import { Request, Response } from 'express';
+import { QueryDto } from 'src/DTOs/query.dto';
+import { MongoService } from 'src/MongoDB/app.service';
 import { JWTService } from './JWT/jwt.service';
 
 @Controller()
 export class AppController {
 
-  constructor(private readonly jwtService: JWTService) {}
+  constructor(private readonly mongoService: MongoService,
+    private readonly jwtService: JWTService) {}
 
   @Get()
   async render_working_page( @Req() request_in : Request, @Res() response_out: Response) {
@@ -25,6 +28,19 @@ export class AppController {
   @Get('verify-email')
   async render_verify_email( @Req() request_in : Request, @Res() response_out: Response) {
     response_out.sendFile(process.cwd()+'/Interface/auth/verification.html');
+  }
+
+  @Post('query')
+  async query(@Body() query_data : QueryDto, @Res() response_out: Response) :Promise<any>{
+    console.log(query_data);
+    if( !query_data || !query_data.name || !query_data.email || !query_data.data ){
+      response_out.json({
+        "status":0,
+        "message":"Incomplete Data"
+      });
+    }else{
+      response_out.json(await this.mongoService.query(query_data));
+    }
   }
   
 }
