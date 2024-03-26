@@ -159,7 +159,7 @@ export class AuthController {
         }
         if( data.status === 102  || data.status === 104 ){
           var token = await this.jwtService.generate_AT(verificator.email);
-          response_out.cookie('token',token,{ maxAge: 60*1000*10 });
+          response_out.cookie('token',token,{ maxAge: 1000*60*60*10 });
         }
         response_out.json( data );
       }
@@ -196,7 +196,7 @@ export class AuthController {
         var result = await this.authService.credentials_passed(credentials);
         if( result.status==108 ){
           var token = await this.jwtService.generate_AT(credentials.email);
-          response_out.cookie('token',token,{ maxAge: 60*1000*10 });
+          response_out.cookie('token',token,{ maxAge: 1000*60*60*10 });
         }
         response_out.json(result);
       }
@@ -219,7 +219,7 @@ export class AuthController {
           "message":"Data Missing"
         });
       }else{
-        response_out.cookie('tool',info.data,{ maxAge: 20*1000 });
+        response_out.cookie('tool',info.data,{ maxAge: 1000*60*60*24 });
         response_out.json({
           "status":234,
           "message":"Cookie Set"
@@ -242,7 +242,7 @@ export class AuthController {
           "message":"Data Missing"
         });
       }else{
-        response_out.cookie('page',info.data,{ maxAge: 20*1000 });
+        response_out.cookie('page',info.data,{ maxAge: 1000*60*60*24 });
         response_out.json({
           "status":234,
           "message":"Cookie Set"
