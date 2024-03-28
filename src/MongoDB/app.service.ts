@@ -197,7 +197,7 @@ export class MongoService {
   //...........................................................................................................
 
   async query(query : Object) :Promise<any> {
-    await this.connect.db('user-all').collection('query').insertOne(query);
+    return await this.connect.db('user-all').collection('query').insertOne(query);
   }
 
 //.....................................................................................
@@ -213,6 +213,4 @@ export class MongoService {
   async demo_remove() :Promise<any>{
     await this.connect.db('new').dropCollection('new');
   }
-
-
 }
