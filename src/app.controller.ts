@@ -32,15 +32,16 @@ export class AppController {
 
   @Post('query')
   async query(@Body() query_data : QueryDto, @Res() response_out: Response) :Promise<any>{
-    console.log(query_data);
     if( !query_data || !query_data.name || !query_data.email || !query_data.data ){
       response_out.json({
         "status":0,
         "message":"Incomplete Data"
       });
-    }else{
-      response_out.json(await this.mongoService.query(query_data));
+    }else if(await this.mongoService.query(query_data)){
+      response_out.json({
+        "status":333,
+        "message":"Done"
+      });
     }
-  }
-  
+  } 
 }
