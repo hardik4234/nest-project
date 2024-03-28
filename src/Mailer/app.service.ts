@@ -10,13 +10,9 @@ export class Emailservice {
   async send_email( email : string ) : Promise<any> {
     try{
       var otp = 0;
-      //console.log("Generating OTP...");
       do{
         otp=Math.round(Math.random()*1000000);
       }while( otp < 100000 )
-      //console.log("OTP Generated");
-      //console.log(otp);
-      //console.log("Sending Email...");
       var status = await this.mailService.sendMail({
         to: email,
         from: process.env.SENDER_EMAIL,
