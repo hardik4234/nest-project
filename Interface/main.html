@@ -270,6 +270,30 @@ function cookie_setting(page_code,url){
   caller.send(obj);
 }
 
+function api_query(){
+        const form = document.querySelector("#query");
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        const sender = JSON.stringify(data);
+
+        const caller = new XMLHttpRequest();
+        const url = '/query';
+        caller.open('POST',url);     
+        caller.setRequestHeader('Content-Type', 'application/json');
+        caller.onload = function() {
+            response_got=JSON.parse(caller.responseText);
+            console.log(response_got.message);
+            if( response_got.status == 333 ){
+              alert("Submitted");
+              window.location.reload();
+            }else{
+              alert("Error");
+            }
+        }
+        caller.send(sender);
+        return false;
+    }
+
 function render_page(page_code){
     switch(page_code) {
         case 'P0':
@@ -294,7 +318,7 @@ function render_page(page_code){
       <div class="w3-container w3-light-blue my-tools w3-text-black w3-padding-16" id="my-tool-1">
         <div class="w3-clear"></div>
         <h3>EMI Calculator</h3>
-        <h5>A tool that gives you a detailed report of Tax Deducted in FDs annnually so as to help you in prevention of the deduction.</h5>
+        <h5>A tool that gives you an overview of the monthly EMI, total amount to be paid and total interest yo be paid.</h5>
       </div>
     </div>
     <div class="w3-quarter">
@@ -357,10 +381,10 @@ function render_page(page_code){
     <i class="fa fa-envelope" style="width:30px"></i> Email: mail@mail.com<br>
     </div>
     <br><br>
-    <form action="/">
-      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="Name"></p>
-      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Email" required name="Email"></p>
-      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message" required name="Message"></p>
+    <form id="query" onsubmit="return api_query()">
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="name" id="name"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Email" required name="email" id="email"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message" required name="data" id="data"></p>
       <p><button class="w3-button w3-black w3-padding-large" type="submit">SEND MESSAGE</button></p>
     </form>
      <div class="w3-center">
@@ -1424,7 +1448,7 @@ function t3_decision(level){
 <div class="w3-bar w3-top w3-large w3-light-blue" style="z-index:4">
   <span class="w3-bar-item w3-left w3-hide-large" onclick="w3_open();"><i class="fa fa-bars"></i></span>
   <span class="w3-bar-item w3-left"><a class="nav-link"><img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top"><span class="responsive">&nbsp;RelaxHardy</span></a></span>
-  <span class="w3-bar-item w3-left"><select class="form-select" id="tools" onchange="render_tool(this.value)//render_main(this.value)//demo(this.value)">
+  <span class="w3-bar-item w3-left"><select class="form-select" id="tools" onchange="render_main(this.value)">
     <option value="NULL">Tools</option>
     <option value="T1">TDS Calculator</option>
     <option value="T2">EMI Calculator</option>
