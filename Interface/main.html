@@ -3,14 +3,31 @@
 <head>
 <title>RelaxHardy</title>
 <link rel="icon" type="image/x-icon" href="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- !IMPORTANT! -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
 <style>
-body
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5
+  {
+    font-family: "Raleway", sans-serif;
+    font-size: 16px;
+  }
+  body
   {
     color: white;
     background-color: #04293a;
@@ -23,10 +40,27 @@ body
   .w3-sidebar
   {
     background-color: #064663;
+    z-index:3;
+    width:300px;
+  }
+  .w3-main
+  {
+    margin-left:300px;
+    margin-top:43px;
   }
   a
   {
     text-decoration: none;
+  }
+  @media screen and (max-width: 1100px) {
+    .w3-sidebar
+    {
+        max-width:240px;
+    }
+    .w3-main
+    {
+      margin-left:240px;
+    }
   }
   @media screen and (max-width: 500px)
   {
@@ -40,20 +74,13 @@ body
     color: white;
     background-color: #04293a ;
   }
-  html,
-  body,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5
-  {
-    font-family: "Raleway", sans-serif
-  }
   .w3-hover-light-blue:active
   {
     background-color: #04293a;;
   }
+
+
+
 
 .empty
 {
@@ -139,12 +166,33 @@ body
     min-height: 500px;
   }
 
+
+
+  .my-heading
+  {
+    text-align: center;
+    border-style:double;
+    margin:20px;
+    font-size: 30px;
+    background-color: #064663;
+  }
+
+  .my-headings
+  {
+    text-align: center;
+    border-style:solid;
+    margin-left:30%;
+    margin-right: 30%;
+    font-size: 30px;
+    background-color: #064663;
+  }
+
 </style>
 <script>
 
 var token = "";
 var tool = "";
-var page = "";
+var page = "P0";
 var user_status = "";
 
 //function to extract the values of the 3 cookies already stored
@@ -160,6 +208,7 @@ function value_setter(){
 }
 
 function token_verifier(){
+  value_setter();
   var obj = `{"token":"${token}"}`;
   const caller = new XMLHttpRequest();
   const url = '/jwt/login';
@@ -179,30 +228,34 @@ function token_verifier(){
 }
 
 function render_main(page_code){
+    bgc_clear();
+    token_verifier();
   switch(page_code) {
     case 'T1':
     case 'T2':
     case 'T3':
-    case 'T4':
-      value_setter();
-      token_verifier();
-      if( user_status == "logout" ){
+      if( user_status == "login" ){
+        cookie_setting(page_code,'/auth/cookie/tool');
+        render_tool(page_code);
+      }else{
         alert("Sign-in required !");
+        bgc_colour(page);
+        //alert(page);
         document.getElementById("tools").selectedIndex = 0;
         return;
-      }else{
-        cookie_setting(page_code,'/auth/cookie/tool')
-        //render_tool();
       }
     break;
     case 'NULL':
-      //render_page();
+      render_page(page);
+      bgc_colour(page);
     break;
     default:
       cookie_setting(page_code,'/auth/cookie/page')
-      //render_page();
+      render_page(page_code);
+      bgc_colour(page_code);
       document.getElementById("tools").selectedIndex = 0;
   }
+  w3_close();
 }
 
 function cookie_setting(page_code,url){
@@ -212,124 +265,16 @@ function cookie_setting(page_code,url){
   caller.setRequestHeader('Content-Type', 'application/json');
   caller.onload = function() {
       response_got=JSON.parse(caller.responseText);
-      alert(response_got.message);
+      //alert(response_got.message);
   }
   caller.send(obj);
 }
 
 function render_page(page_code){
     switch(page_code) {
-        case 'A1':
-          // code block
-        break;
-        case 'A2':
-          // code block
-        break;
-        case 'A3':
-          // code block
-        break;
-        case 'A4':
-          // code block
-        break;
-        case 'A5':
-          // code block
-        break;
-        case 'A6':
-          // code block
-        break;
-        case 'A7':
-          // code block
-        break;
-        default:
-          // code block
-      }
-}
-
-function render_tool(page_code){
-    switch(page_code) {
-        case 'A1':
-          // code block
-        break;
-        case 'A2':
-          // code block
-        break;
-        case 'A3':
-          // code block
-        break;
-        case 'A4':
-          // code block
-        break;
-        default:
-          // code block
-      }
-}
-
-//statements to be executed automatically
-value_setter();
-token_verifier();
-if(user_status=="login") render_tool();
-else                     render_page();
-
-function change_status(){
-  value_setter();
-  token_verifier();
-  if(user_status=="login"){
-    document.cookie="token=";
-    alert(document.cookie);
-    value_setter();
-    token_verifier();
-  }else{
-    window.location='/sign-in';
-  }
-}
-
-</script>
-</head>
-<body class="w3-text-white">
-
-<!-- Top container -->
-<div class="w3-bar w3-top w3-large w3-light-blue" style="z-index:4">
-  <span class="w3-bar-item w3-left w3-hide-large" onclick="w3_open();"><i class="fa fa-bars"></i></span>
-  <span class="w3-bar-item w3-left"><a class="nav-link" href="/"><img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top"><span class="responsive">&nbsp;RelaxHardy</span></a></span>
-  <span class="w3-bar-item w3-left" onclick=""><select class="form-select" id="tools" onchange="render_main(this.value)">
-    <option value="NULL">Tools</option>
-    <option value="T1">TDS Calculator</option>
-    <option value="T2">EMI Calculator</option>
-    <option value="T3">ITR Selector</option>
-    <option value="T4">Tax Planner</option>
-  </select></span>
-  <span class="w3-bar-item w3-right" id="auth" onclick="change_status()">....</span>
-</div>
-
-<!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-  <div class="w3-container">
-    <h4>Topics to study</h4>
-  </div>
-  <div class="w3-bar-block">
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" style="background-color:#04293a;"><i class="fa fa-users fa-fw"></i>Home</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P1')"><i class="fa fa-diamond fa-fw"></i>Tax & Its Types</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P2')"><i class="fa fa-bullseye fa-fw"></i>TDS & TCS</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P3')"><i class="fa fa-eye fa-fw"></i>FD & Interest</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P4')"><i class="fa fa-users fa-fw"></i>Loans & EMI</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P5')"><i class="fa fa-bell fa-fw"></i>Taxable Income</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P6')"><i class="fa fa-bank fa-fw"></i>Rebate</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P7')"><i class="fa fa-history fa-fw"></i>Tax Deduction</a>
-    <a class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main('P8')"><i class="fa fa-cog fa-fw"></i>Tax Exemption</a>
-    <br><br>
-  </div>
-</nav>
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
-
-  <!-- Header -->
-  <header class="w3-container" style="padding-top:30px">
-  </header>
-
+        case 'P0':
+        content=`
+  <header class="w3-container" style="padding-top:30px"></header>
 
   <div class="empty w3-display-container">
     <div class="w3-display-middle w3-center">
@@ -418,10 +363,1104 @@ function change_status(){
       <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message" required name="Message"></p>
       <p><button class="w3-button w3-black w3-padding-large" type="submit">SEND MESSAGE</button></p>
     </form>
-  <div>
+     <div class="w3-center">
+     <a href="#render" class="w3-button w3-black w3-margin"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+  </div>
+  </div>
 
   <!-- End page content -->
+</div>`;
+        break;
+        case 'P1':
+           content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">Tax and Types</div><br>
+  
+  <div style="text-align: center;">
+  <p>There are two main categories of taxes, which are further subdivided into other categories.</p>
+  <p>Direct Tax & Indirect Tax</p><br><br>
+  </div>
+  
+  
+    <div class="w3-padding-large">
+      <p class="my-headings">DIRECT TAX</p>
+      <p>Direct Tax is tax that is to be paid directly to the government by the individual or legal entity. Direct taxes are overlooked by the Central Board of Direct Taxes (CBDT). Direct taxes cannot be transferred to any other individual or legal entity.</p><br>
+      
+      <ul>
+      <li>Income Tax</li>
+      <p>This is the tax that is levied on the annual income or the profits which is directly paid to the government.Everyone who earns any kind of income is liable to pay income tax. There are different tax slabs for different income amounts. Apart from individuals, legal entities are also liable to pay taxes. These include all Artificial Judicial Persons, Hindu Undivided Family (HUF), Body of Individuals (BOI), Association of Persons (AOP), companies, local firms, and local authorities.</p><br>
+
+      <li>Capital Gains</li>
+      <p>Capital Gains Tax is levied on the sale of a property or money received through an investment. It could be from either short-term or long-term capital gains from an investment. This includes all exchanges made in kind that are weighed against its value.</p><br>
+
+      <li>Securities Transaction Tax</li>
+      <p>STT is levied on stock market and securities trading. The tax is levied on the price of the share as well as securities traded on the Indian Stock Exchange (ISE).</p><br>
+
+      <li>Prerequisite Tax</li>
+      <p>These are taxes that are levied on the different benefits and perks that are provided by a company to its employees.</p><br>
+      
+      <li>Corporate Tax</li>
+      <p>The income tax paid by a company is defined as the corporate tax. It is based on the different slabs that the revenue falls under.</p><br>
+      </ul>
+    </div>
+
+    <div class="w3-padding-large">
+      <p class="my-headings">INDIRECT TAX</p>
+      <p>Taxes that are levied on services and products are called indirect tax. Indirect taxes are collected by the seller of the service or product. The tax is added to the price of the products and services. It increases the price of the product or service. There is only one indirect tax levied by the government currently. This is called GST or the Goods and Services Tax.</p><br>
+      
+      <ul>
+        <li>Customs Duty</li>
+        <p>In case products have been imported from outside India, customs duty is levied. The amount of tax that will be levied will depend on the product that has been imported.</p><br>
+
+        <li>Excise Duty</li>
+        <p>The Tax is levied on goods or produced goods in India. The manufacturing company directly collects the tax.</p><br>
+
+        <li>Service Tax</li>
+        <p>Service Tax is charged on the company’s services. It is included in the product’s price and collection of the tax will depend on the type of service. Several paid services such as advertising, financial services, banking, consultancy, maintenance, healthcare, and telephone are covered under the tax.</p><br>
+
+        <li>Sales Tax</li>
+        <p>The tax that is charged to sell the product is Sales Tax. The seller of the product is charged the tax. The different levels that are applicable under sales tax are Intra-State Level, Import/Export Sales, and Inter-State Sale.</p><br>
+        </ul>
+    </div>
+    
+  
+  <div class="w3-padding-large">
+    <p class="my-headings">OTHER TAX</p>
+    <p>Other taxes are minor revenue generators and are small cess taxes. The various subcategories of other taxes are as follows:</p>
+    
+    <ul>
+      <li>Property tax</li>
+      <p>This is also called Real Estate Tax or Municipal Tax. Residential and commercial property owners are subject to property tax. It is used for the maintenance of some of the fundamental civil services. Property tax is levied by the municipal bodies based in each city.</p><br>
+
+      <li>Professional tax</li>
+      <p>This employment tax is levied on those who practice a profession or earn a salaried income such as lawyers, chartered accountants, doctors, etc. This tax differs from state to state. Not all states levy professional tax.</p><br>
+
+      <li>Entertainment tax</li>
+      <p>This is tax that is levied on television series, movies, exhibitions, etc. The tax is levied on the gross collections from the earnings. Entertainment tax is also referred to as amusement tax.</p><br>
+
+      <li>Registration fees, stamp duty, transfer tax</li>
+      <p>These are collected in addition to or as a supplement to property tax at the time of purchasing a property.</p><br>
+
+      <li>Education cess</li>
+      <p>Education Cess is levied to fund the educational programs launched and maintained by the government of India.</p><br>
+      </ul>
+  </div>`;
+        break;
+        case 'P2':
+        content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">TDS</div><br>
+
+  <ul>
+  <li>TDS is tax deducted at source by any company or individual making a payment if the payment exceeds the thresholds mentioned under respective sections.</li>
+  <li>TDS is applicable on interest, salaries, brokerage, professional fees, commission, purchase of goods, rent, etc.</li>
+  <li>TDS is deducted whenever a payment is due or made, whichever is earlier.</li>
+  <li>TDS is to be deducted by the individual (or company) making the payment. </li>
+  </ul><br>
+  
+    <div style="text-align:center">
+      2nd last column of the form 26 AS shows the deducted TDS for each transaction.
+      <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/26as.png" class="w3-round w3-image" alt="26AS" width="600" height="333">
+    </div>
+    
+  </div>`;
+        break;
+        case 'P3':
+      content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">FD and Interest</div><br>
+
+  <ul>
+  <li>TDS is collected from taxpayers as a portion of their annual income tax by the source (bank).</li>
+  <li>It is deducted by the source only if the annual interest exceeds 40 thousand for regular taxpayers and 50 thousand for senior citizen taxpayers. Therefore, it is recommended to start a Fixed Deposit in the name of a senior citizen if possible.</li>
+  <li>Assuming the interest rate as 7% we see that to keep the annual FD interest below the limit of the TDS deduction for the first year, the principal value should not be more than 5.5 lakhs for regular taxpayers and 7 lakhs for senior citizen taxpayers. Depositing a prinicipal of more than the above values for their respective criteria might lead to TDS deduction annually.</li>
+  <li>The above provided information can help the taxpayers to keep the interest below the limit of TDS deduction for 1 year. However, people usually don't deposit their money for just 1 year. They have a longer duration and also a bigger principal in mind.</li>
+  </ul><br>
+  
+  <div class="w3-row">
+
+    <div class="w3-col m6 w3-center w3-padding-large">
+      <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/26as.png" class="w3-round w3-image" alt="26AS" width="500" height="333">
+    </div>
+
+    <div class="w3-col m6 w3-padding-large"><br>
+      <p>You can try our TDS Calculator for free.</p>
+      <p>All you need to have is an account and sign in.</p>
+      <p>There you will get a detailed information of the interest generated by an FD every year and also the amount of TDS deducted each year.</p>
+      <p>In our TDS calculator you can customize the amount, rate and time using range bars.</p>
+      <p>You can also switch options in between a regular taxpayer and a senior citizen to get precised reports.</p>
+      <p>It will help you to reduce the amount of TDS being deducted and eventually save a lot of your time in financing.</p>
+    </div>
+
+  </div>`;
+        break;
+        case 'P4':
+         content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">Taxable Income</div><br>
+
+  <ul>
+    <li>Taxable income is the portion of your gross income used to calculate how much tax you owe in a given tax year.</li>
+    <li>It consists of both earned and unearned income.</li>
+    <li>Earned income comes from compensation, businesses, partnerships, and royalties, among others.</li>
+    <li>Unearned income that is considered taxable includes canceled debts, government benefits (such as unemployment benefits and disability payments), strike benefits, and lottery payments.</li>
+    <li>Taxable income also includes earnings generated from appreciated assets that have been sold during the year and from dividends and interest income.</li>
+    <li>Taxable income is generally less than adjusted gross income because of deductions that reduce it.</li>
+  </ul>
+
+  <div style="text-align:center;">
+    Tax slabs at different amounts in different financial years with regimes.
+    <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/slabs.png" class="w3-round w3-image" alt="Tax Slabs" width="700" height="400">
+  </div><br>`;
+        break;
+        case 'P5':
+         content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">Rebate</div><br>
+
+  <ul>
+  <li>A tax rebate is a refund that you are eligible for if the taxes paid by you exceed your tax liability (amount of tax to be paid).</li>
+  <li>For example, if your total tax liability is amounting to Rs. 20,000, but if the bank pays the Government a TDS or if the total TDS deducted while crediting your salary amounts to Rs. 30,000 , you are eligible for a tax rebate..</li>
+  <li>People can file the ITR even if they dont have a source of income but it is mandatory to file an ITR if annual income exceeds 2.5 lakhs.</li>
+  </ul><br>
+  
+  <div style="text-align:center;">
+    Given below is a table showing some recent tax regimes with their slabs
+    <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/slabs.png" class="w3-round w3-image" alt="Tax Slabs" width="700" height="400">
+  </div><br>
+
+  <div class="m6 w3-padding-large">
+      From the above table we can say that :
+      <ul>
+      <li>If your gross income is more than 5 Lakhs, then you will have to take the help of a tax deduction system to reduce your taxable income.</li>
+      <li>If your gross income is less than 5 Lakhs, then in that case filing an ITR will be useful.</li>
+      <li>Also, people with a gross income of up to 5 Lakhs need to know that they are also eligible for a full tax rebate.</li>
+    </ul>
+    </div>`;
+        break;
+        case 'P6':
+         content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">Deduction</div><br>
+  
+  <div style="text-align:center;">
+    Tax deduction refers to claims made to reduce your taxable income, arising from various investments and expenses incurred by a taxpayer. Thus, income tax deduction reduces your overall tax liability. It is a kind of tax benefit which helps you save tax. However, the amount of tax you can save depends on the type of tax benefit you claim.<br>
+  </div><br>
+
+  <div style="text-align:center;">
+    <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/deduction_1.png" class="w3-round w3-image" alt="Deductions 1" width="700" height="400">
+  </div><br>
+  
+  <div style="text-align:center;">
+    <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/deduction_2.png" class="w3-round w3-image" alt="Deductions 2" width="700" height="400">
+  </div><br>`;
+        break;
+        case 'P7':
+         content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  <div class="my-heading">Exemption</div><br>
+
+  <div style="margin:20px;">
+  <p>An exemption refers to the deduction allowed by the law to reduce the amount of income that would otherwise be taxed.</p>
+  <p>It is a legal deduction from the income that would otherwise be taxed for a qualifying reason.</p>
+  <p>A tax exemption is the right to have some or all of one's income exempt from country’s taxation.</p>
+  <p>The majority of taxpayers are eligible for a number of exemptions that can be used to lower their taxable income, while some people and organisations are fully free from paying taxes.</p>
+  <p>Both the terms 'tax deduction' and 'tax exemption' refer to a lowering of taxable income; they are forms of tax relief or tax breaks provided by the government. However, tax exemptions may also include complete relief from taxes, reduced rates and tax on only a portion of income. Tax exemption means you don't have to pay tax for a particular income.</p>
+  <p>E.g. - You may get a tax exemption for donating to charitable institutions and various relief funds.</p>
+  <p>In order to encourage investments, the government generally offers tax exempt entities to invest in. Such entities are exempted from a single or multiple taxation laws. For example, investments in the Sukanya Samriddhi Scheme are fully tax exempt.</p>
+  </div>`;
+        break;
+        case 'P8':
+        content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+
+  <div class="my-heading">26AS</div><br>
+  <ul>
+  <li>26AS is an annual report of a taxpayer.</li>
+  <li>It gives a detailed overview of a taxpayer's financial activities from various sources for a specific year.</li>
+  <li>The form is easy to understand and interpret as transactions from the same source (Company/Organization) are grouped together and  are arranged according to the month and date of transactions.</li>
+  </ul>
+  
+  <div class="w3-row">
+  
+    <div class="w3-col m6 w3-center w3-padding-large">
+      <img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/homepage/content/26as.png" class="w3-round w3-image" alt="26AS" width="500" height="333">
+    </div>
+
+    <div class="w3-col m6 w3-padding-large">
+      <p>Every time a transaction has to be linked with a taxpayer, it is linked with his/her PAN card.</p>
+      <p>Data available in the form 26AS is linked with the PAN card of a taxpayer.</p>
+      <p>PAN card being the point of data retrieval, makes this form unique for a particular taxpayer.</p>
+      <ul>
+      <li>It has a record of the amount of salary deducted to pay the tax everytime it is credited to your bank account.</li><br>
+      <li>Similarly, in the case of FDs (Fixed Deposits) it has a record od the amount of interest deducted to pay the tax everytime interest is calculated or on maturity.</li><br>
+      <li>It also keeps a record of the advanced tax paid by the taxpayer and also details of refunds issued to a taxpayer.</li>
+      </ul>
+    </div>
+    
+  </div>`;
+      }
+      document.getElementById('render').innerHTML=content;
+}
+
+function render_tool(page_code){
+    switch(page_code) {
+
+        case 'T1':
+        document.getElementById("tools").selectedIndex = 1;
+        document.getElementById('my-css').innerHTML=`
+    .separator
+    {
+        display: flex;
+        margin-left: 30px;
+    }
+
+    .query
+    {
+      min-width:700px;
+    }
+
+    #ranges
+    {
+        text-align-last: center;
+        border-style: solid;
+        border-radius: 6px;
+        border-color: white;
+        color: #ffffff;
+        background-color: #064663;
+    }
+
+    #options
+    {
+        max-width: 450px;
+        min-width: 400px;
+        text-align: left;
+    }
+
+    .container
+    {
+        max-width: 330px;
+        border-style: solid;
+        border-radius: 6px;
+        border-color: white;
+        color: #ffffff;
+        background-color: #064663;
+    }
+
+    #headings
+    {
+        display: flex;
+        font-size: 20px;
+    }
+
+    .graphs
+    {
+      max-width:550px;
+    }
+    
+    #box{
+    border-style: solid;
+    border-color: white;
+    border-radius: 6px;
+    color:white;
+    background-color: #064663;
+    max-width:700px;
+    text-align:left;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 100;
+    border-radius: 20px;
+    }
+
+.buttons{
+    background-color: #87CEEB;
+    color: #064663;
+    border-radius: 5px;
+    font-size: large;
+}
+
+.taxed{
+    color: red;
+}
+
+.untaxed{
+    color: #8be615;
+}
+
+#conclusion{
+    background-color: #064663;
+}
+
+
+@media screen and (max-width: 1300px)
+{
+  .separator
+  {
+    display:inline-block;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+  .query
+  {
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 770px)
+{
+  .query
+    {
+      min-width:auto;
+    }
+}`;
+        
+document.querySelector('#tool-js').remove();
+var location= document.getElementsByTagName('body')[0];
+var script= document.createElement('script');
+script.type= 'text/javascript';
+script.src= 'tools/css/tds.js';
+script.id= 'tool-js';
+location.appendChild(script);        
+        
+        content=`
+  <header class="w3-container" style="padding-top:30px"></header>
+  
+  <form id="details" class="container-sm" style="text-align: center;" onsubmit="return t1_incomplete_data_check()"><br>
+    <div class="separator">
+        <div class="container-sm query" id="ranges">
+            <br>
+            <div class="container-sm" id="headings">
+            <div class="container-sm">PRINCIPAL</div><br>
+            <div class="container-sm" id="p-text"></div><br>
+            </div>
+            <input type="range" class="form-range" id="p" min="5000" max="1000000" step="1000" oninput="t1_p_display(this.value)" required><br>
+            <br>
+            <div class="container-sm" id="headings">
+            <div class="container-sm">RATE</div><br>
+            <div class="container-sm" id="r-text"></div><br>
+            </div>
+            <input type="range" class="form-range" id="r" min="0" max="10" oninput="t1_r_display(this.value)" required><br>
+            <br>
+            <div class="container-sm" id="headings">
+            <div class="container-sm">TIME</div><br>
+            <div class="container-sm" id="t-text"></div><br>
+            </div>
+            <input type="range" class="form-range" id="t" min="1" max="10" oninput="t1_t_display(this.value)" required><br>
+            <br>
+        </div>  
+        <div class="container-sm" id="options">
+            <div class="container">
+                <div class="container-sm" id="headings">AGE</div>
+                <label><input type="radio" name="age" class="form-check-input" value="40000" required>Less Than 60</label><br>
+                <label><input type="radio" name="age" class="form-check-input" value="50000" required>More Than 60</label><br>
+                <br>
+            </div>
+            <br>
+            <div class="container">
+                <div class="container-sm" id="headings">COMPOUNDING FREQUENCY</div>
+                <label><input type="radio" name="frequency" class="form-check-input" value="1" required>ANNUALY</label><br>
+                <label><input type="radio" name="frequency" class="form-check-input" value="1" required>HALF-YEARLY</label><br>
+                <label><input type="radio" name="frequency" class="form-check-input" value="1" required>QUARTERLY</label><br>
+                <label><input type="radio" name="frequency" class="form-check-input" value="1" required>MONTHLY</label><br>
+                <br>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container-sm" align="center">
+        <input type="submit" class="buttons" value="ANALYSE"><br><br>
+        <input type="button" class="buttons" value="CLEAR DATA" onclick="t1_clear_data()">
+        <input type="button" class="buttons" value="CLEAR QUERY" onclick="t1_clear_query()">
+    </div>
+    </form>
+    <div class="container-sm" align="center">
+        <div class="separator" id="chart">
+        <div class="container-sm">
+            <canvas id="interest" class="graphs"></canvas>
+        </div>
+        <div class="container-sm">
+            <canvas id="amount" class="graphs"></canvas>
+        </div>
+        </div>
+    </div>
+    <br>
+    <div class="container-sm" id="analysis" align="center"></div>
+    </div>`;
+        document.getElementById('render').innerHTML=content; 
+        break;
+
+        case 'T2':
+        document.getElementById("tools").selectedIndex = 2;
+        document.getElementById('my-css').innerHTML=`
+    .query
+    {
+        max-width:1000px;
+    }
+    #ranges
+    {
+        text-align-last: center;
+        border-style: solid;
+        border-radius: 6px;
+        border-color: white;
+        color: #ffffff;
+        background-color: #064663;
+    }
+
+    .container
+    {
+        max-width: 330px;
+        border-style: solid;
+        border-radius: 20px;
+        border-color: white;
+        color: #ffffff;
+        background-color: blueviolet;
+    }
+
+    .headings
+    {
+        display: flex;
+        font-size: 20px;
+    }
+    
+    #box{
+        background-color: blueviolet;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 100;
+        border-radius: 20px;
+    }
+
+    .buttons{
+        background-color: #87CEEB;
+        color: #064663;
+        border-radius: 5px;
+        font-size: large;
+    }
+    
+    #conclusion
+    {
+      background-color: #064663;
+      text-align:center;
+    }
+    `;
+
+document.querySelector('#tool-js').remove();
+var location= document.getElementsByTagName('body')[0];
+var script= document.createElement('script');
+script.type= 'text/javascript';
+script.src= 'tools/css/emi.js';
+script.id= 'tool-js';
+location.appendChild(script);  
+
+        content=` <!-- Header -->
+  <header class="w3-container" style="padding-top:30px">
+  </header>
+  <form id="details" class="container-sm" onsubmit="return t2_incomplete_data_check()"><br>
+        <div class="container-sm query" id="ranges">
+            <br>
+            <div class="container-sm headings">
+            <div class="container-sm">PRINCIPAL</div><br>
+            <div class="container-sm" id="p-text"></div><br>
+            </div>
+            <input type="range" class="form-range" id="p" min="5000" max="1000000" step="1000" oninput="t2_p_display(this.value)" required><br>
+            <br>
+            <div class="container-sm headings">
+            <div class="container-sm">RATE</div><br>
+            <div class="container-sm" id="r-text"></div><br>
+            </div>
+            <input type="range" class="form-range" id="r" min="0" max="10" step="0.01"  oninput="t2_r_display(this.value)" required><br>
+            <br>
+            <div class="container-sm headings">
+            <div class="container-sm">MONTHS</div><br>
+            <div class="container-sm" id="t-text"></div><br>
+            </div>
+            <input type="range" class="form-range" id="t" min="1" max="360" oninput="t2_t_display(this.value)" required><br>
+            <br>
+        </div>
+    <br>
+    <div class="container-sm" align="center">
+        <input type="submit" class="buttons" value="ANALYSE"><br><br>
+        <input type="button" class="buttons" value="CLEAR DATA" onclick="t2_clear_data()">
+        <input type="button" class="buttons" value="CLEAR QUERY" onclick="t2_clear_query()">
+    </div>
+    </form>
+    <br>
+    <div class="separator" id="chart">
+      <div class="container-sm">
+          <canvas id="data"></canvas>
+      </div>
+    </div>
+    <br><br>
+    <div class="container-sm" id="analysis"></div>
+    </div>`;
+        document.getElementById('render').innerHTML=content; 
+        break;
+
+        case 'T3':
+        document.getElementById("tools").selectedIndex = 3;
+        document.getElementById('my-css').innerHTML=`
+            .separator
+            {
+                display: flex;
+            }
+            .container-sm
+            {
+                max-width: 450px;
+            }
+            .container
+            {
+                border-style: solid;
+                border-radius: 7px;
+                border-color: white;
+                color: #04293a;
+                background-color: #87CEEB;
+            }
+            #container1,
+            #container2,
+            #container3,
+            #container4,
+            #container5
+            {
+                translate:-50px;
+                transition-duration: 0.5s;
+                opacity: 0;
+            }
+            .itr-container
+            {
+                margin: auto;
+            }
+            .itr-individual
+            {
+                font-size: 22px;
+                border-style: solid;
+                border-radius: 20px;
+                border-color: white;
+                font-family:'Franklin Gothic Medium';
+                color: #ffffff;
+                background-color: #064663;
+                padding: 7px 35px;
+                transform: scale(1.3);
+                transition-duration: 0.5s;
+            }
+
+            #hidden-button
+            {
+              display:none;
+            }
+            .modal-title
+            {
+              color:black;
+            }
+            .modal-body
+            {
+              color:black;
+            }
+
+            @media screen and (max-width: 750px) {
+              .container-sm
+              {
+                max-width:400px;
+              }
+            }`;
+
+document.querySelector('#tool-js').remove();
+var location= document.getElementsByTagName('body')[0];
+var script= document.createElement('script');
+script.type= 'text/javascript';
+script.src= 'tools/css/itr.js';
+script.id= 'tool-js';
+location.appendChild(script);  
+
+        content=` <!-- Header -->
+  <header class="w3-container" style="padding-top:30px">
+  </header>
+  
+  <div class="separator">
+
+    <form id="container" class="container-sm"><br>
+        <div id="container1" class="container"></div><br>
+        <div id="container2" class="container"></div><br>
+        <div id="container3" class="container"></div><br>
+        <div id="container4" class="container"></div><br>
+        <div id="container5" class="container"></div><br>
+    </form>
+    <div class="itr-container w3-hide-small">
+        <br>
+        <div class="itr-individual" id="itr1">ITR 1</div><br>
+        <div class="itr-individual" id="itr2">ITR 2</div><br>
+        <div class="itr-individual" id="itr3">ITR 3</div><br>
+        <div class="itr-individual" id="itr4">ITR 4</div><br>
+        <div class="itr-individual" id="itr5">ITR 5</div><br>
+        <div class="itr-individual" id="itr6">ITR 6</div><br>
+        <div class="itr-individual" id="itr7">ITR 7</div><br>
+    </div>
+
+    </div>
+    
+    <!-- Button trigger modal -->
+<button type="button" id="hidden-button" data-bs-toggle="modal" data-bs-target="#exampleModal">b</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Best Match</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="result">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+        document.getElementById('render').innerHTML=content; 
+        t3_decision(0);
+        break;
+      }
+}
+
+//statements to be executed automatically
+function automatic(){
+  token_verifier();
+if(user_status=="logout" || !tool)
+render_main(page);
+else
+render_main(tool);
+}
+
+function change_status(){
+  token_verifier();
+  if(user_status=="login"){
+    if(confirm('Confirm Signing Out')){
+      document.cookie="token=";
+      //alert(document.cookie);
+      token_verifier();
+      render_main(page);
+    }
+  }else if(user_status=="logout"){
+    window.location='/sign-in';
+  }
+}
+
+function bgc_colour(page_code){
+    document.getElementById(page_code).style.backgroundColor = "#04293a";
+}
+
+function bgc_clear(){
+    for(var i=0;i<=8;i++){
+        document.getElementById(`P${i}`).style.backgroundColor = "#064663";
+    }
+}
+
+//................................TDS Calculator...................................
+
+var columns = [];
+var interest= [];
+var colour= [];
+var amount = [];
+
+function t1_p_display(value){
+    document.getElementById('p-text').innerHTML=value;
+}
+function t1_r_display(value){
+    document.getElementById('r-text').innerHTML=value;
+}
+function t1_t_display(value){
+    document.getElementById('t-text').innerHTML=value;
+}
+
+function t1_incomplete_data_check(){
+    let principal = Number(document.getElementById('p').value);
+    let rate = Number(document.getElementById('r').value);
+    let time = Number(document.getElementById('t').value);
+    let checked_age,checked_frequency;
+    let age = document.getElementsByName('age');
+    for(let i=0;i<age.length;i++) {
+        if( age[i].checked ) {
+            checked_age = Number(i);
+        }
+    }
+  
+    let frequency = document.getElementsByName('frequency');
+    for(let i=0;i<frequency.length;i++) {
+        if( frequency[i].checked ) {
+            checked_frequency = Number(i);
+        }
+    }
+  
+    if( !principal || !rate || !time || checked_age==undefined || checked_frequency==undefined ){
+        alert("Incomplete Data");
+    }else if( principal<=0 || rate<=0 || time<=0 ){
+        alert("Invalid Data");
+    }else{
+        t1_clear_data();
+        t1_analyse(checked_age,checked_frequency);
+        t1_graph();
+    }
+    return false;
+}
+
+function t1_graph(){
+    new Chart("interest", {
+        type: "bar",
+        data: {
+            labels: columns,
+            datasets: [{
+                backgroundColor: colour,
+                data: interest
+            }]
+        },
+        options: {
+            legend: {display: false},
+            title: {
+                display: true,
+                text: "Interest"
+            }
+        }
+    });
+    new Chart("amount", {
+        type: "bar",
+        data: {
+            labels: columns,
+            datasets: [{
+                backgroundColor: colour,
+                data: amount
+            }]
+        },
+        options: {
+            legend: {display: false},
+            title: {
+                display: true,
+                text: "Amount"
+            }
+        }
+    });
+    columns = [];
+    interest= [];
+    colour= [];
+    amount = [];
+}
+
+function t1_clear_data(){
+    document.getElementById('analysis').innerHTML="";
+    document.querySelector('#interest').remove();
+    document.querySelector('#amount').remove();
+    document.getElementById('chart').innerHTML='<div class="container-sm"><canvas id="interest" class="graphs"></canvas></div><div class="container-sm"><canvas id="amount" class="graphs"></canvas></div>';
+}
+
+function t1_clear_query(){
+    document.getElementById('details').reset();
+    t2_p_display(document.getElementById('p').value);
+    t2_r_display(document.getElementById('r').value);
+    t2_t_display(document.getElementById('t').value);
+}
+
+function t1_analyse(checked_age,checked_frequency){
+    let principal = Number(document.getElementById('p').value);
+    let rate = Number(document.getElementById('r').value);
+    let time = Number(document.getElementById('t').value);
+    
+    let age = document.getElementsByName('age');
+    let limit = Number( age[checked_age].value);
+
+    let frequency = document.getElementsByName('frequency');
+    let compounded = Number( frequency[checked_frequency].value);
+    
+    let total_tax=0;
+    
+    let P=0,I=0,A=principal,year=0,tax,Ir;
+    while(time--){
+        year++;
+        P = (Number(A)).toFixed(2);
+        I = (Number(P) * Number(rate) / Number(100)).toFixed(2);
+
+        if(I>limit){
+
+            tax = (Number(I) / 10).toFixed(2);
+            Ir = (Number(I) - Number(tax)).toFixed(2);
+            A = (Number(P) + Number(Ir)).toFixed(2);
+            document.getElementById('analysis').innerHTML += '<div id="box"><br><p class="taxed">YEAR '+year+'</p>Principal = '+P+'<br>Annual Interest = '+I+'<br><p class="taxed">TDS to be Deducted = '+tax+'</p>Interest to be Compounded after TDS is Deducted = '+Ir+'<br>Amount at the end of year '+year+' = '+A+'<br><br></div><br><br>';
+            total_tax += Number(tax);
+            
+            colour.push("red");
+        }else{
+            
+            A = (Number(P) + Number(I)).toFixed(2);
+            document.getElementById('analysis').innerHTML += '<div id="box"><br><p class="untaxed">YEAR '+year+'</p>Principal = '+P+'<br>Annual Interest = '+I+'<br><p class="untaxed">TDS to be Deducted = 0</p>Interest to be Compounded after TDS is Deducted = 0<br>Amount at the end of year '+year+' = '+A+'<br><br></div><br><br>';
+
+            colour.push("green");
+        }
+        amount.push(A);
+        interest.push(I);
+        columns.push('Year '+year);
+    }
+
+    document.getElementById('analysis').innerHTML += '<div id="conclusion">CONCLUSION<br><br>Total Amount Generated = Rs. '+(A-total_tax).toFixed(2)+'<br>Total Tax Deducted = Rs. '+total_tax.toFixed(2)+'<br>Interest Earned = Rs. '+(A-principal-total_tax).toFixed(2)+'<br><br></div>';
+
+}
+
+//................................EMI Calculator ..................................
+
+var emi;
+var total_emi;
+var total_interest;
+
+function t2_p_display(value){
+    document.getElementById('p-text').innerHTML=value;
+}
+function t2_r_display(value){
+    document.getElementById('r-text').innerHTML=value;
+}
+function t2_t_display(value){
+    document.getElementById('t-text').innerHTML=value;
+}
+
+function t2_incomplete_data_check(){
+    let principal = Number(document.getElementById('p').value);
+    let rate = Number(document.getElementById('r').value);
+    let time = Number(document.getElementById('t').value);
+  
+    if( !principal || !rate || !time ){
+        alert("Incomplete Data");
+    }else if( principal<=0 || rate<=0 || time<=0 ){
+        alert("Invalid Data");
+    }else{
+        t2_clear_data()
+        t2_analyse();
+        t2_graph();
+
+    }
+    return false;
+}
+
+function t2_clear_data(){
+    document.getElementById('analysis').innerHTML="";
+    document.querySelector('#data').remove();
+    document.getElementById('chart').innerHTML='<div class="container-sm"><canvas id="data"></canvas></div>';
+
+}
+
+function t2_clear_query(){
+    document.getElementById('details').reset();
+    t2_p_display(document.getElementById('p').value);
+    t2_r_display(document.getElementById('r').value);
+    t2_t_display(document.getElementById('t').value);
+}
+
+function t2_graph(){
+    new Chart("data", {
+        type: "doughnut",
+        data: {
+          labels: ["Principal", "Interest"],
+          datasets: [{
+            backgroundColor: ["#2b5797","#b91d47"],
+            data: [Math.round(total_emi-total_interest), Math.round(total_interest)]
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Comparison of Interest Amount with Principal Amount"
+          }
+        }
+      });
+
+      emi = null;
+      total_emi = null;
+      total_interest = null;
+
+}
+
+function t2_analyse(){
+let principal = Number(document.getElementById('p').value);
+let rate = Number(document.getElementById('r').value);
+let month = Number(document.getElementById('t').value);
+
+let p=parseFloat(principal);
+let r=parseFloat(rate) / 1200;
+let m=parseFloat(month);
+
+emi= (p*r*((r+1)**m))/(((r+1)**m)-1);
+total_emi=emi*m;
+total_interest=total_emi-p;
+
+document.getElementById('analysis').innerHTML += '<div id="conclusion">CONCLUSION<br><br>EMI = '+Math.round(emi)+'<br>Interest = '+Math.round(total_interest)+'<br>EMI = '+Math.round(total_emi)+'<br><br><br></div>';
+}
+
+//..................................ITR Selector....................................
+
+var forms=[0,0,0,0,0,0,0];
+
+function t3_initiator(level,...param){
+    t3_neutral(level);
+    for(i=0;i<=param.length;i++){
+        if(forms[param[i]-1]==0) forms[param[i]-1]=level;
+    }
+    for(i=level+1;i<=5;i++){
+      let id = 'container' + i ;
+        if(document.getElementById(id)){
+            document.getElementById(id).style.translate='-50px';
+            document.getElementById(id).style.opacity='0';
+        }
+    }
+    options=0;
+    let suitable_itr = -1;
+    for(i=0;i<=6;i++){
+        if(forms[i]==0){
+          options++;
+          suitable_itr = i+1;
+        }
+    }
+    t3_itr_changer();
+    if(options>1){
+        t3_decision(level);
+    }else{
+      document.getElementById('result').innerHTML="ITR "+suitable_itr+" is suitable for your sources of Income";
+      document.getElementById('hidden-button').click();
+    } 
+}
+
+function t3_neutral(level){
+    for(i=0;i<7;i++){
+        if(forms[i]>=level) forms[i]=0;
+    }
+}
+
+function t3_itr_changer(){
+    for(i=0;i<=6;i++){
+      let id = 'itr' + (i+1);
+        if(forms[i]==0) document.getElementById(id).style.transform='scale(1.3)';
+        else            document.getElementById(id).style.transform='scale(1)';
+    }
+}
+
+function t3_decision(level){
+    if(level==0){
+            html='User:<br>';
+            html+='<label><input type="radio" name="user-type" class="form-check-input" onchange="t3_initiator(1,4,5,6,7)" required>Salaried / Pensioned Resident Individual</label><br>';
+            html+='<label><input type="radio" name="user-type" class="form-check-input" onchange="t3_initiator(1,1,4,5,6,7)" required>NRI / HUF</label><br>';
+            html+='<label><input type="radio" name="user-type" class="form-check-input" onchange="t3_initiator(1,1,2,3,5,6,7)" required>Freelancer</label><br>';
+            html+='<label><input type="radio" name="user-type" class="form-check-input" onchange="t3_initiator(1,1,2,3)" required>Others</label><br>';
+            html+='</div>';
+            document.getElementById('container1').innerHTML=html;
+            container1.style.opacity='1';
+            container1.style.translate='0px';
+    }
+    else if(level==1){
+        if(forms[1]==0 && forms[2]==0){
+            html='Income Type:<br>';
+            html+='<label><input type="radio" name="income-type" class="form-check-input" onchange="t3_initiator(2,1,2)" required>Intraday (Future & Options)</label><br>';
+            html+='<label><input type="radio" name="income-type" class="form-check-input" onchange="t3_initiator(2,1,3)" required>Non Intraday</label><br>';
+            html+='<label><input type="radio" name="income-type" class="form-check-input" onchange="t3_initiator(2,1,2)" required>Both Intraday and Non Intraday </label><br>';
+            html+='<label><input type="radio" name="income-type" class="form-check-input" onchange="t3_initiator(2)" required>None</label><br>';
+            html+='</div>';
+            document.getElementById('container2').innerHTML=html;
+            container2.style.opacity='1';
+            container2.style.translate='0px';
+        }
+        else {
+            html='Taxable Income:<br>';
+            html+='<label><input type="radio" name="others" class="form-check-input" onchange="t3_initiator(2,4,6,7)" required>Firms / LLP  /  AOP / BOI / Artificial Judicial Persons / Trust / Company / Local Authorities / Cooperative Societies</label><br>';
+            html+='<label><input type="radio" name="others" class="form-check-input" onchange="t3_initiator(2,4,5)" required>Others</label><br>';
+            html+='</div>';
+            document.getElementById('container2').innerHTML=html;
+            container2.style.opacity='1';
+            container2.style.translate='0px';
+        }
+    }
+    else if(level==2){
+        if(forms[1]==0 && forms[2]==0){
+            html='Capital Gains:<br>';
+            html+='<label><input type="radio" name="capital-gains" class="form-check-input" onchange="t3_initiator(3,1,3)" required>Mutual Fund</label><br>';
+            html+='<label><input type="radio" name="capital-gains" class="form-check-input" onchange="t3_initiator(3,1,3)" required>Real Estate</label><br>';
+            html+='<label><input type="radio" name="capital-gains" class="form-check-input" onchange="t3_initiator(3,1,3)" required>Both Mutual Fund and Real Estate</label><br>';
+            html+='<label><input type="radio" name="capital-gains" class="form-check-input" onchange="t3_initiator(3,3)" required>None</label><br>';
+            html+='</div>';
+            document.getElementById('container3').innerHTML=html;
+            container3.style.opacity='1';
+            container3.style.translate='0px';
+        }
+        else{
+            html='Under Section<br>139(4A) / 139(4B) / 139(4C) / 139(4D):<br>';
+            html+='<label><input type="radio" name="others2" class="form-check-input" onchange="t3_initiator(3,7)" required>Yes</label><br>';
+            html+='<label><input type="radio" name="others2" class="form-check-input" onchange="t3_initiator(3,6)" required>No</label><br>';
+            html+='</div>';
+            document.getElementById('container3').innerHTML=html;
+            container3.style.opacity='1';
+            container3.style.translate='0px';
+        }
+    }
+    else if(level==3){
+        if(forms[0]==0 && forms[1]==0){
+            html='Properties on rent:<br>';
+            html+='<label><input type="radio" name="rent" class="form-check-input" onchange="t3_initiator(4,2)" required>1</label><br>';
+            html+='<label><input type="radio" name="rent" class="form-check-input" onchange="t3_initiator(4,1)" required>More than 1</label><br>';
+            html+='<label><input type="radio" name="rent" class="form-check-input" onchange="t3_initiator(4)" required>None</label><br>';
+            html+='</div>';
+            document.getElementById('container4').innerHTML=html;
+            container4.style.opacity='1';
+            container4.style.translate='0px';
+        }
+    }
+    else if(level==4){
+        if(forms[0]==0 && forms[1]==0){
+            html='Taxable Income:<br>';
+            html+='<label><input type="radio" name="income" class="form-check-input" onchange="t3_initiator(5,2)" required>Below 50 lakhs (<=50 l)</label><br>';
+            html+='<label><input type="radio" name="income" class="form-check-input" onchange="t3_initiator(5,1)" required>Above 50 lakhs (> 50 l)</label><br>';
+            html+='</div>';
+            document.getElementById('container5').innerHTML=html;
+            container5.style.opacity='1';
+            container5.style.translate='0px';
+        }
+    }
+}
+
+</script>
+</head>
+<body class="w3-text-white" onload="automatic()">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-large w3-light-blue" style="z-index:4">
+  <span class="w3-bar-item w3-left w3-hide-large" onclick="w3_open();"><i class="fa fa-bars"></i></span>
+  <span class="w3-bar-item w3-left"><a class="nav-link"><img src="https://relaxhardy.s3.ap-south-1.amazonaws.com/finance/global/logo.png" alt="logo" width="26" height="26" class="d-inline-block align-text-top"><span class="responsive">&nbsp;RelaxHardy</span></a></span>
+  <span class="w3-bar-item w3-left"><select class="form-select" id="tools" onchange="render_tool(this.value)//render_main(this.value)//demo(this.value)">
+    <option value="NULL">Tools</option>
+    <option value="T1">TDS Calculator</option>
+    <option value="T2">EMI Calculator</option>
+    <option value="T3">ITR Selector</option>
+  </select></span>
+  <span class="w3-bar-item w3-right" id="auth" onclick="change_status()">....</span>
 </div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-animate-left" id="mySidebar"><br>
+  <div class="w3-container">
+    <h4>Topics to study</h4>
+  </div>
+  <div class="w3-bar-block">
+    <a id="P0" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-users fa-fw"></i>Home</a>
+    <a id="P1" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-diamond fa-fw"></i>Tax & Its Types</a>
+    <a id="P2" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-bullseye fa-fw"></i>TDS</a>
+    <a id="P3" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-eye fa-fw"></i>FD & Interest</a>
+    <a id="P4" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-bell fa-fw"></i>Taxable Income</a>
+    <a id="P5" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-bank fa-fw"></i>Rebate</a>
+    <a id="P6" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-history fa-fw"></i>Tax Deduction</a>
+    <a id="P7" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-cog fa-fw"></i>Tax Exemption</a>
+    <a id="P8" class="w3-bar-item w3-button w3-padding w3-hover-light-blue" onclick="render_main(this.id)"><i class="fa fa-cog fa-fw"></i>26 AS</a>
+    <br><br>
+  </div>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<style id="my-css"></style>
+<script id="tool-js"></script>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" id="render"></div>
+<!-- End page content -->
 
 <script>
 // Get the Sidebar
