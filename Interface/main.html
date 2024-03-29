@@ -207,8 +207,9 @@ function value_setter(){
   }
 }
 
-function token_verifier(){
+async function token_verifier(){
   value_setter();
+  let myPromise = new Promise(function(resolve) {
   var obj = `{"token":"${token}"}`;
   const caller = new XMLHttpRequest();
   const url = '/jwt/login';
@@ -217,19 +218,23 @@ function token_verifier(){
   caller.onload = function() {
     response_got=JSON.parse(caller.responseText);
     if( response_got.status === 109 ){
-      user_status="login";
+      resolve("login");
+      //user_status="login";
       document.getElementById('auth').innerHTML="Sign Out";
     }else{
-      user_status="logout"; 
+      resolve("logout");
+      //user_status="logout"; 
       document.getElementById('auth').innerHTML="Sign In";
     }
   }
   caller.send(obj);
+  });
+  user_status= await myPromise;
 }
 
-function render_main(page_code){
+async function render_main(page_code){
     bgc_clear();
-    token_verifier();
+    await token_verifier();
   switch(page_code) {
     case 'T1':
     case 'T2':
@@ -1045,21 +1050,20 @@ location.appendChild(script);
 }
 
 //statements to be executed automatically
-function automatic(){
-  token_verifier();
-if(user_status=="logout" || !tool)
-render_main(page);
-else
-render_main(tool);
+async function automatic(){
+  await token_verifier();
+  if(user_status=="logout" || !tool)
+    render_main(page);
+  else
+    render_main(tool);
 }
 
-function change_status(){
-  token_verifier();
+async function change_status(){
+  await token_verifier();
   if(user_status=="login"){
     if(confirm('Confirm Signing Out')){
       document.cookie="token=";
-      //alert(document.cookie);
-      token_verifier();
+      await token_verifier();
       render_main(page);
     }
   }else if(user_status=="logout"){
